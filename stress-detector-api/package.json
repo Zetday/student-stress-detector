@@ -1,0 +1,39 @@
+{
+  "name": "stress-detector-api",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:prod": "node src/server.js",
+    "start:dev": "nodemon src/server.js",
+    "migrate": "node-pg-migrate",
+    "lint": "eslint ./src"
+  },
+  "dependencies": {
+    "amqplib": "^1.0.3",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1",
+    "nanoid": "^5.1.6",
+    "node-pg-migrate": "^8.0.4",
+    "nodemailer": "^6.10.1",
+    "pg": "^8.20.0",
+    "redis": "^5.11.0",
+    "remove": "^0.1.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.3",
+    "eslint-config-dicodingacademy": "^0.9.5",
+    "globals": "^17.4.0",
+    "nodemon": "^3.1.14"
+  }
+}
