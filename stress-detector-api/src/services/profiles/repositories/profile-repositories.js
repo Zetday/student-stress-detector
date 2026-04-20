@@ -7,7 +7,6 @@ class ProfileRepositories {
     this.pool = new Pool();
     this.cacheService = new CacheService();
   }
-
   async updateUserInfo(id, { fullname, email }) {
     const updatedAt = new Date().toISOString();
     const query = {
@@ -67,6 +66,40 @@ class ProfileRepositories {
 
     return result.rows.length > 0;
   }
+
+  /**
+   * Returns the current profile_image filename stored for the user,
+   * so that the old file can be deleted from disk before saving the new one.
+   */
+  async getProfilePictureById(id) {
+    const query = {
+      text: 'SELECT profile_image FROM users WHERE id = $1',
+      values: [id],
+    };
+
+    const result = await this.pool.query(query);
+    return result.rows[0]?.profile_image ?? null;
+  }
+
+  /**
+   * Persists the new profile picture filename and invalidates the user cache.
+   */
+  async updateProfilePicture(id, filename) {
+    const updatedAt = new Date().toISOString();
+    const query = {
+      text: 'UPDATE users SET profile_image = $1, updated_at = $2 WHERE id = $3 RETURNING id, profile_image',
+      values: [filename, updatedAt, id],
+    };
+
+    const result = await this.pool.query(query);
+
+    if (result.rows.length) {
+      await this.cacheService.delete(`users:${id}`);
+    }
+
+    return result.rows[0];
+  }
 }
 
 export default new ProfileRepositories();
+

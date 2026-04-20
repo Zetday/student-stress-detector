@@ -28,9 +28,8 @@ export const up = (pgm) => {
       type: 'TEXT',
       notNull: true,
     },
-    role: {
-      type: 'VARCHAR(50)',
-      notNull: true,
+    profile_image: {
+      type: 'TEXT',
     },
     created_at: {
       type: 'TEXT',

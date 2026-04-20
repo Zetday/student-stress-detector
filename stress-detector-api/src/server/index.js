@@ -13,6 +13,9 @@ app.use(
   }),
 );
 app.use(express.json());
+
+app.use('/uploads/images', express.static('src/services/uploads/files/profiles'));
+
 app.use(routes);
 app.use(ErrorHandler);
 

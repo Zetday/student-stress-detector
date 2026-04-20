@@ -1,8 +1,19 @@
+import multer from 'multer';
 import response from '../utils/response.js';
 import { ClientError } from '../exceptions/index.js';
 
 // eslint-disable-next-line no-unused-vars
 const ErrorHandler = (err, req, res, next) => {
+  // Handle multer-specific errors (file size, unexpected field, etc.)
+  if (err instanceof multer.MulterError) {
+    const messages = {
+      LIMIT_FILE_SIZE: 'Ukuran file melebihi batas maksimum 5 MB',
+      LIMIT_UNEXPECTED_FILE: 'Field file tidak sesuai. Gunakan field "profilePicture"',
+    };
+    const message = messages[err.code] || `Upload error: ${err.message}`;
+    return response(res, 400, message, null);
+  }
+
   // Handle ClientError and its subclasses (InvariantError, NotFoundError)
   if (err instanceof ClientError) {
     return response(res, err.statusCode, err.message, null);
@@ -21,3 +32,4 @@ const ErrorHandler = (err, req, res, next) => {
 };
 
 export default ErrorHandler;
+
