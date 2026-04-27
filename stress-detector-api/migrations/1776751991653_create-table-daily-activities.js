@@ -19,20 +19,36 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    activity_type: {
-      type: 'VARCHAR(50)',
+    sleep_hours: {
+      type: 'FLOAT',
       notNull: true,
     },
-    start_time: {
+    work_hours: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    screen_time: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    exercise_minutes: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    fatigue_level: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    mood: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    caffeine_intake: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    date: {
       type: 'TEXT',
-      notNull: true,
-    },
-    end_time: {
-      type: 'TEXT',
-      notNull: true,
-    },
-    is_completed: {
-      type: 'BOOLEAN',
       notNull: true,
     },
     created_at: {
@@ -40,6 +56,12 @@ export const up = (pgm) => {
       notNull: true,
     },
   });
+
+  pgm.addConstraint(
+    'daily_activities',
+    'fk_daily_activities.user_id_users.id',
+    'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE',
+  );
 };
 
 /**

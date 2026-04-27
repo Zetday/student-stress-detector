@@ -19,6 +19,10 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
+    activity_id: {
+      type: 'VARCHAR(50)',
+      notNull: true,
+    },
     stress_level: {
       type: 'VARCHAR(50)',
       notNull: true,
@@ -32,6 +36,17 @@ export const up = (pgm) => {
       notNull: true,
     },
   });
+
+  pgm.addConstraint(
+    'stress_predictions',
+    'fk_stress_predictions.user_id_users.id',
+    'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE',
+  );
+  pgm.addConstraint(
+    'stress_predictions',
+    'fk_stress_predictions.activity_id_daily_activities.id',
+    'FOREIGN KEY(activity_id) REFERENCES daily_activities(id) ON DELETE CASCADE',
+  );
 };
 
 /**

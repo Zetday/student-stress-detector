@@ -10,7 +10,7 @@ export const shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 export const up = (pgm) => {
-  pgm.createTable('recommendations', {
+  pgm.createTable('insights', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
@@ -23,7 +23,7 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    recommendation_text: {
+    insight_text: {
       type: 'TEXT',
       notNull: true,
     },
@@ -34,13 +34,13 @@ export const up = (pgm) => {
   });
 
   pgm.addConstraint(
-    'recommendations',
-    'fk_recommendations.user_id_users.id',
+    'insights',
+    'fk_insights.user_id_users.id',
     'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE',
   );
   pgm.addConstraint(
-    'recommendations',
-    'fk_recommendations.activity_id_daily_activities.id',
+    'insights',
+    'fk_insights.activity_id_daily_activities.id',
     'FOREIGN KEY(activity_id) REFERENCES daily_activities(id) ON DELETE CASCADE',
   );
 };
@@ -51,5 +51,5 @@ export const up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 export const down = (pgm) => {
-  pgm.dropTable('recommendations');
+  pgm.dropTable('insights');
 };
