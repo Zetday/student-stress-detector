@@ -18,37 +18,31 @@ export const up = (pgm) => {
     user_id: {
       type: 'VARCHAR(50)',
       notNull: true,
-      references: 'users(id)',
-      onDelete: 'CASCADE',
     },
     activity_id: {
       type: 'VARCHAR(50)',
       notNull: true,
-      references: 'activities(id)',
-      onDelete: 'CASCADE',
     },
     recommendation_text: {
       type: 'TEXT',
       notNull: true,
     },
     created_at: {
-      type: 'TIMESTAMP',
+      type: 'TEXT',
       notNull: true,
-      default: pgm.func('CURRENT_TIMESTAMP'),
     },
   });
 
-  pgm.addConstraint('recommendations', 'fk_recommendations_user_id', {
-    foreignKeys: 'user_id',
-    references: 'users(id)',
-    onDelete: 'CASCADE',
-  });
-
-  pgm.addConstraint('recommendations', 'fk_recommendations_activity_id', {
-    foreignKeys: 'activity_id',
-    references: 'activities(id)',
-    onDelete: 'CASCADE',
-  });
+  pgm.addConstraint(
+    'recommendations',
+    'fk_recommendations.user_id_users.id',
+    'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE',
+  );
+  pgm.addConstraint(
+    'recommendations',
+    'fk_recommendations.activity_id_daily_activities.id',
+    'FOREIGN KEY(activity_id) REFERENCES daily_activities(id) ON DELETE CASCADE',
+  );
 };
 
 /**
@@ -58,6 +52,4 @@ export const up = (pgm) => {
  */
 export const down = (pgm) => {
   pgm.dropTable('recommendations');
-  pgm.dropConstraint('recommendations', 'fk_recommendations_user_id');
-  pgm.dropConstraint('recommendations', 'fk_recommendations_activity_id');
 };
