@@ -25,7 +25,7 @@
     "multer": "^2.1.1",
     "nanoid": "^5.1.6",
     "node-pg-migrate": "^8.0.4",
-    "nodemailer": "^6.10.1",
+    "nodemailer": "^8.0.5",
     "pg": "^8.20.0",
     "redis": "^5.11.0",
     "remove": "^0.1.5",
