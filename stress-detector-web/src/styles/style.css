@@ -1,2 +1,41 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Untuk Light Mode */
+[data-theme="light"] {
+  --bg: #fdfaf6;              
+  --bg-card: #ffffff;
+  --text: #2d2d2d;
+  --text-muted: #7a7a7a;
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --danger: #ef4444;
+  --border: #e5e7eb;
+  --header-bg: #ffffff;
+  --input-bg: #ffffff;
+  --shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* Untuk Dark Mode */
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-card: #1e293b;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --danger: #f87171;
+  --border: #334155;
+  --header-bg: #1e293b;
+  --input-bg: #334155;
+  --shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* General Style */
+:root {
+  --font-main: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-main);
+}
