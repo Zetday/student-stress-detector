@@ -19,7 +19,23 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
+    study_hours: {
+      type: 'FLOAT',
+      notNull: true,
+    },
     sleep_hours: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    class_attendance: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    exam_frequency: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    assignment_load: {
       type: 'FLOAT',
       notNull: true,
     },
@@ -31,28 +47,52 @@ export const up = (pgm) => {
       type: 'FLOAT',
       notNull: true,
     },
+    social_media_use: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    physical_exercise: {
+      type: 'BOOLEAN',
+      notNull: true,
+    },
     exercise_minutes: {
       type: 'INTEGER',
       notNull: true,
     },
+    caffeine_intake_mg: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    family_income_level: {
+      type: 'VARCHAR(50)',
+      notNull: true,
+    },
+    family_support: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    peer_pressure: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    anxiety_level: {
+      type: 'FLOAT',
+      notNull: true,
+    },
     fatigue_level: {
-      type: 'INTEGER',
+      type: 'FLOAT',
       notNull: true,
     },
     mood: {
-      type: 'INTEGER',
-      notNull: true,
-    },
-    caffeine_intake: {
-      type: 'INTEGER',
+      type: 'FLOAT',
       notNull: true,
     },
     date: {
-      type: 'TEXT',
+      type: 'DATE',
       notNull: true,
     },
     created_at: {
-      type: 'TEXT',
+      type: 'TIMESTAMPTZ',
       notNull: true,
     },
   });

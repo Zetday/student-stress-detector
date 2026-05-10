@@ -32,7 +32,7 @@ export const up = (pgm) => {
       notNull: true,
     },
     created_at: {
-      type: 'TEXT',
+      type: 'TIMESTAMPTZ',
       notNull: true,
     },
   });
