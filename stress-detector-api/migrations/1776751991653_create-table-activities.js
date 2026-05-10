@@ -10,7 +10,7 @@ export const shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 export const up = (pgm) => {
-  pgm.createTable('daily_activities', {
+  pgm.createTable('activities', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
