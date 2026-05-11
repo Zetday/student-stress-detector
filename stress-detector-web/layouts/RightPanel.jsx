@@ -5,16 +5,33 @@ import InputName from "../src/components/InputName";
 import InputPassword from "../src/components/InputPassword";
 import ButtonSubmit from "../src/components/ButtonSubmit";
 
+import logo from '../src/assets/img/logo.png'
+
 export default function RightPanel() {
   const { t } = useLanguage();
   return (
-    <div className="w-full md:w-1/2 min-h-screen 
-      bg-gray-100 flex items-center justify-center p-6 md:p-10">
+    <div className="
+        w-full md:w-1/2 
+        min-h-screen 
+      bg-[#1C1B1B] 
+        flex
+        items-center 
+        justify-center
+        p-6 md:p-10">
 
       <div className="w-full max-w-md">
 
+        {/* Logo */}
+        <div className="mb-8">
+            <img
+              src={logo}
+              alt="StressLens Logo"
+              className="w-32 object-contain"
+              />
+        </div>
+        
         {/* Title */}
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-2">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-2">
           Mulai Perjalanan Anda
         </h2>
 

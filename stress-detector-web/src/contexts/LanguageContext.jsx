@@ -13,6 +13,8 @@ const translations = {
     SubmitRegister: "Daftar Sekarang",
     LabelLogin: "Sudah Punya Akun?",
     LinkLogin: "Masuk Di sini",
+    Create: "Buat Akun",
+    Form: "Silakan lengkapi formulir di bawah ini.",
     
   },
   en: {
@@ -25,6 +27,8 @@ const translations = {
     SubmitRegister: "Register Now",
     LabelLogin: "Already Have an Account?",
     LinkLogin: "Enter here",
+    Create: "Create Account",
+    Form: "Please complete the form below.",
   },
 };
 

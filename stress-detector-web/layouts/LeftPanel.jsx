@@ -1,68 +1,149 @@
-import logo from '../src/assets/img/logo.png'
-
 export default function LeftPanel() {
   return (
-    <div className="relative w-full md:w-1/2 min-h-screen 
-      bg-gradient-to-br from-[#0f2a5f] via-[#081a3a] to-black 
-      text-white p-8 md:p-14 flex flex-col justify-between">
+    <div
+      className="
+        relative 
+        w-full
+        md:w-1/2 
+        min-h-screen
+        bg-[#0A0A0A]
+        text-white
+        px-10 py-12
+        flex flex-col justify-between
+        overflow-hidden
+      "
+    >
+      {/* subtle gradient glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.12),transparent_35%)]" />
 
-      {/* Overlay glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(59,130,246,0.15),transparent_40%)]" />
-
+      {/* content */}
       <div className="relative z-10">
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center">
-            <img 
-              src={logo} 
-              alt="Logo" 
-              className="w-40 h-40 object-contain"
-            />
-          </div>
-        </div>
 
-        {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-          Ubah Tekanan <br />
-          Menjadi Presisi.
+        {/* Heading */}
+        <h1
+          className="
+            text-[40px] md:text-[54px]
+            font-bold
+            leading-[1.05]
+            tracking-[-0.02em]
+            mb-8
+            max-w-md
+          "
+        >
+          Analisis Klinis Untuk
+          <br/>
+          Keseimbangan Anda.
         </h1>
 
-        {/* Desc */}
-        <p className="text-gray-300 max-w-md text-sm md:text-base mb-10">
-          Optimalkan kesehatan mental Anda dengan teknologi analisis biometrik 
-          tercanggih untuk performa yang lebih tenang dan terukur.
+        {/* Description */}
+        <p
+          className="
+            text-gray-400
+            text-[17px]
+            leading-8
+            max-w-md
+            mb-14
+          "
+        >
+          Optimalkan kesehatan mental Anda dengan teknologi
+          analisis biometrik tercanggih untuk performa yang
+          lebih tenang dan terukur.
         </p>
 
-        {/* Cards */}
-        <div className="space-y-4">
+        {/* Feature cards */}
+        <div className="space-y-5 max-w-xl">
 
           {/* Card 1 */}
-          <div className="bg-white/5 border border-white/10 
-            rounded-xl p-5 backdrop-blur-md">
-            <p className="font-medium mb-1">
-              Analisis Biometrik Real-time
-            </p>
-            <p className="text-xs text-gray-400">
-              Pantau fluktuasi kortisol dan detak jantung Anda secara instan dengan akurasi klinis.
-            </p>
+          <div
+            className="
+              flex items-start gap-4
+              rounded-2xl
+              border border-white/10
+              bg-white/[0.03]
+              px-5 py-5
+              backdrop-blur-sm
+            "
+          >
+            {/* icon */}
+            <div
+              className="
+                w-11 h-11
+                rounded-xl
+                bg-[#111827]
+                border border-white/10
+                flex items-center justify-center
+                text-blue-400
+                text-lg
+                shrink-0
+              "
+            >
+              📊
+            </div>
+
+            <div>
+              <h3 className="text-[17px] font-semibold mb-1">
+                Analisis Biometrik Real-time
+              </h3>
+
+              <p className="text-sm text-gray-400 leading-6">
+                Pantau fluktuasi kortisol dan detak jantung
+                Anda secara instan dengan akurasi klinis.
+              </p>
+            </div>
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white/5 border border-white/10 
-            rounded-xl p-5 backdrop-blur-md">
-            <p className="font-medium mb-1">
-              Laporan Klinis Mingguan
-            </p>
-            <p className="text-xs text-gray-400">
-              Dapatkan ringkasan data mendalam yang disusun oleh algoritma medis untuk performa optimal.
-            </p>
+          <div
+            className="
+              flex items-start gap-4
+              rounded-2xl
+              border border-white/10
+              bg-white/[0.03]
+              px-5 py-5
+              backdrop-blur-sm
+            "
+          >
+            {/* icon */}
+            <div
+              className="
+                w-11 h-11
+                rounded-xl
+                bg-[#111827]
+                border border-white/10
+                flex items-center justify-center
+                text-green-400
+                text-lg
+                shrink-0
+              "
+            >
+              🔒
+            </div>
+
+            <div>
+              <h3 className="text-[17px] font-semibold mb-1">
+                Laporan Klinis Mingguan
+              </h3>
+
+              <p className="text-sm text-gray-400 leading-6">
+                Dapatkan ringkasan data mendalam yang disusun
+                oleh algoritma medis untuk performa optimal.
+              </p>
+            </div>
           </div>
 
         </div>
       </div>
 
-      {/* Footer */}
-      <p className="text-xs text-gray-500 mt-10 relative z-10">
+      {/* footer */}
+      <p
+        className="
+          relative z-10
+          text-[11px]
+          tracking-[0.25em]
+          text-gray-600
+          mt-16
+        "
+      >
         © 2024 STRESS LENS. SCIENTIFIC ATELIER PRECISION.
       </p>
     </div>
