@@ -23,6 +23,10 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
+    prediction_date: {
+      type: 'DATE',
+      notNull: true,
+    },
     stress_level: {
       type: 'VARCHAR(50)',
       notNull: true,
@@ -44,8 +48,8 @@ export const up = (pgm) => {
   );
   pgm.addConstraint(
     'stress_predictions',
-    'fk_stress_predictions.activity_id_daily_activities.id',
-    'FOREIGN KEY(activity_id) REFERENCES daily_activities(id) ON DELETE CASCADE',
+    'fk_stress_predictions.activity_id_activities.id',
+    'FOREIGN KEY(activity_id) REFERENCES activities(id) ON DELETE CASCADE',
   );
 };
 

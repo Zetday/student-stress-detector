@@ -10,7 +10,7 @@ export const shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 export const up = (pgm) => {
-  pgm.createTable('activities', {
+  pgm.createTable('weekly_summaries', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
@@ -19,56 +19,28 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    sleep_hours: {
-      type: 'DECIMAL(4,2)',
+    week_start: {
+      type: 'DATE',
       notNull: true,
     },
-    study_hours: {
-      type: 'DECIMAL(4,2)',
+    week_end: {
+      type: 'DATE',
       notNull: true,
     },
-    screen_time_hours: {
-      type: 'DECIMAL(4,2)',
-      notNull: true,
-    },
-    social_media_hours: {
-      type: 'DECIMAL(4,2)',
-      notNull: true,
-    },
-    physical_activity_minutes: {
-      type: 'INTEGER',
-      notNull: true,
-    },
-    caffeine_intake_mg: {
-      type: 'INTEGER',
-      notNull: true,
-    },
-    mood_score: {
-      type: 'INTEGER',
-      notNull: true,
-    },
-    fatigue_level: {
-      type: 'INTEGER',
-      notNull: true,
-    },
-    assignment_load: {
+    average_stress_level: {
       type: 'FLOAT',
       notNull: true,
     },
-    deadlines_pressure: {
-      type: 'INTEGER',
+    average_sleep_hours: {
+      type: 'FLOAT',
       notNull: true,
     },
-    social_interaction_score: {
-      type: 'INTEGER',
+    average_screen_time_hours: {
+      type: 'FLOAT',
       notNull: true,
     },
-    financial_worry_score: {
-      type: 'INTEGER',
-      notNull: true,
-    },
-    health_condition_score: {
-      type: 'INTEGER',
+    average_study_hours: {
+      type: 'FLOAT',
       notNull: true,
     },
     created_at: {
@@ -78,9 +50,14 @@ export const up = (pgm) => {
   });
 
   pgm.addConstraint(
-    'activities',
-    'fk_activities.user_id_users.id',
+    'insights',
+    'fk_insights.user_id_users.id',
     'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE',
+  );
+  pgm.addConstraint(
+    'insights',
+    'fk_insights.activity_id_activities.id',
+    'FOREIGN KEY(activity_id) REFERENCES activities(id) ON DELETE CASCADE',
   );
 };
 
@@ -90,5 +67,5 @@ export const up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 export const down = (pgm) => {
-  pgm.dropTable('daily_activities');
+  pgm.dropTable('weekly_summaries');
 };
