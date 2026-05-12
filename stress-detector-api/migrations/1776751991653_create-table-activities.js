@@ -10,7 +10,7 @@ export const shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 export const up = (pgm) => {
-  pgm.createTable('daily_activities', {
+  pgm.createTable('activities', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
@@ -19,19 +19,35 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    study_hours: {
-      type: 'FLOAT',
-      notNull: true,
-    },
     sleep_hours: {
-      type: 'FLOAT',
+      type: 'DECIMAL(4,2)',
       notNull: true,
     },
-    class_attendance: {
-      type: 'FLOAT',
+    study_hours: {
+      type: 'DECIMAL(4,2)',
       notNull: true,
     },
-    exam_frequency: {
+    screen_time_hours: {
+      type: 'DECIMAL(4,2)',
+      notNull: true,
+    },
+    social_media_hours: {
+      type: 'DECIMAL(4,2)',
+      notNull: true,
+    },
+    physical_activity_minutes: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    caffeine_intake_mg: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    mood_score: {
+      type: 'INTEGER',
+      notNull: true,
+    },
+    fatigue_level: {
       type: 'INTEGER',
       notNull: true,
     },
@@ -39,56 +55,20 @@ export const up = (pgm) => {
       type: 'FLOAT',
       notNull: true,
     },
-    work_hours: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    screen_time: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    social_media_use: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    physical_exercise: {
-      type: 'BOOLEAN',
-      notNull: true,
-    },
-    exercise_minutes: {
+    deadlines_pressure: {
       type: 'INTEGER',
       notNull: true,
     },
-    caffeine_intake_mg: {
-      type: 'FLOAT',
+    social_interaction_score: {
+      type: 'INTEGER',
       notNull: true,
     },
-    family_income_level: {
-      type: 'VARCHAR(50)',
+    financial_worry_score: {
+      type: 'INTEGER',
       notNull: true,
     },
-    family_support: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    peer_pressure: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    anxiety_level: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    fatigue_level: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    mood: {
-      type: 'FLOAT',
-      notNull: true,
-    },
-    date: {
-      type: 'DATE',
+    health_condition_score: {
+      type: 'INTEGER',
       notNull: true,
     },
     created_at: {
@@ -98,8 +78,8 @@ export const up = (pgm) => {
   });
 
   pgm.addConstraint(
-    'daily_activities',
-    'fk_daily_activities.user_id_users.id',
+    'activities',
+    'fk_activities.user_id_users.id',
     'FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE',
   );
 };

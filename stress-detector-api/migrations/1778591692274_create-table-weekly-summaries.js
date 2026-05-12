@@ -10,7 +10,7 @@ export const shorthands = undefined;
  * @returns {Promise<void> | void}
  */
 export const up = (pgm) => {
-  pgm.createTable('insights', {
+  pgm.createTable('weekly_summaries', {
     id: {
       type: 'VARCHAR(50)',
       primaryKey: true,
@@ -19,20 +19,28 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    activity_id: {
-      type: 'VARCHAR(50)',
+    week_start: {
+      type: 'DATE',
       notNull: true,
     },
-    weekly_summary_id: {
-      type: 'VARCHAR(50)',
+    week_end: {
+      type: 'DATE',
       notNull: true,
     },
-    period_type: {
-      type: 'VARCHAR(50)',
+    average_stress_level: {
+      type: 'FLOAT',
       notNull: true,
     },
-    insight_text: {
-      type: 'TEXT',
+    average_sleep_hours: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    average_screen_time_hours: {
+      type: 'FLOAT',
+      notNull: true,
+    },
+    average_study_hours: {
+      type: 'FLOAT',
       notNull: true,
     },
     created_at: {
@@ -59,5 +67,5 @@ export const up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 export const down = (pgm) => {
-  pgm.dropTable('insights');
+  pgm.dropTable('weekly_summaries');
 };

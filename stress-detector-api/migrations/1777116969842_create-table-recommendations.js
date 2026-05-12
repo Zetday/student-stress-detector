@@ -23,6 +23,14 @@ export const up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
+    weekly_summary_id: {
+      type: 'VARCHAR(50)',
+      notNull: true,
+    },
+    period_type: {
+      type: 'VARCHAR(50)',
+      notNull: true,
+    },
     recommendation_text: {
       type: 'TEXT',
       notNull: true,
@@ -40,8 +48,8 @@ export const up = (pgm) => {
   );
   pgm.addConstraint(
     'recommendations',
-    'fk_recommendations.activity_id_daily_activities.id',
-    'FOREIGN KEY(activity_id) REFERENCES daily_activities(id) ON DELETE CASCADE',
+    'fk_recommendations.activity_id_activities.id',
+    'FOREIGN KEY(activity_id) REFERENCES activities(id) ON DELETE CASCADE',
   );
 };
 

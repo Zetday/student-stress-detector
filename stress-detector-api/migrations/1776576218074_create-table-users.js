@@ -31,18 +31,6 @@ export const up = (pgm) => {
     profile_image: {
       type: 'TEXT',
     },
-    date_of_birth: {
-      type: 'DATE',
-    },
-    gender: {
-      type: 'VARCHAR(20)',
-    },
-    university_type: {
-      type: 'VARCHAR(50)',
-    },
-    tuition: {
-      type: 'VARCHAR(50)',
-    },
     created_at: {
       type: 'TIMESTAMPTZ',
       notNull: true,
