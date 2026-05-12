@@ -28,11 +28,11 @@ export const up = (pgm) => {
       notNull: false,
     },
     expires_at: {
-      type: 'TEXT',
+      type: 'TIMESTAMPTZ',
       notNull: true,
     },
     created_at: {
-      type: 'TEXT',
+      type: 'TIMESTAMPTZ',
       notNull: true,
     },
   });
