@@ -3,13 +3,11 @@ export default function LeftPanel() {
     <div
       className="
         relative 
-        w-full
-        md:w-1/2 
-        min-h-screen
+        h-full
         bg-[#0A0A0A]
         text-white
         px-10 py-12
-        flex flex-col justify-between
+        flex flex-col justify-center
         overflow-hidden
       "
     >
@@ -42,7 +40,7 @@ export default function LeftPanel() {
             text-[17px]
             leading-8
             max-w-md
-            mb-14
+            mb-10
           "
         >
           Optimalkan kesehatan mental Anda dengan teknologi

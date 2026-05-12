@@ -6,6 +6,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 
 // Asset
 import logo from "../assets/img/logo.png";
+import google from "../assets/img/google-color-svgrepo-com.svg"
 
 // Komponent
 import ButtonSubmit from "../components/ButtonSubmit";
@@ -46,7 +47,7 @@ function RegisterPage() {
       className="
         min-h-screen
         bg-[#0B0B0B]
-        flex items-center justify-center
+        flex justify-center
         px-4 py-10
       "
     >
@@ -54,7 +55,7 @@ function RegisterPage() {
       <div
         className="
           w-full max-w-6xl
-          min-h-[720px]
+          h-auto
           rounded-3xl
           overflow-hidden
           bg-[#111111]
@@ -151,9 +152,16 @@ function RegisterPage() {
                   font-medium
                   hover:bg-[#1B1B1B]
                   transition
+
+                  flex items-center justify-center gap-3
                 "
               >
-                Lanjut dengan Google <i class="fa-brands fa-google"></i>
+                <span>Lanjut dengan Google</span>
+                <img
+                  src={google}
+                  alt="Google"
+                  className="w-5 h-5 object-contain"
+                />
               </button>
 
               {/* Switch */}
