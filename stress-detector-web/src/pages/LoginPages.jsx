@@ -22,10 +22,18 @@ function LoginPage() {
   const [name, onNameChange] = useInput("");
   const [email, onEmailChange] = useInput("");
   const [password, onPasswordChange] = useInput("");
-  const [confirmPassword, onConfirmPasswordChange] = useInput("");
 
   const { t } = useLanguage();
-  const navigate = useNavigate();
+
+  function onSubmitHandler(e) {
+    e.preventDefault();
+
+    console.log({
+      name,
+      email,
+      password,
+    });
+  }
 
   return (
     <section
@@ -91,20 +99,12 @@ function LoginPage() {
               />
 
               {/* Password Grid */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-4">
                 <InputPassword
                   label={t?.password || "Kata Sandi"}
                   value={password}
-                  onChange={onPasswordChange}> {t.LabelPassword} </InputPassword>
-
-                <InputPassword
-                  label={
-                    t?.confirmPassword || "Konfirmasi"
-                  }
-                  value={confirmPassword}
-                  onChange={onConfirmPasswordChange}
-                >{t.LabelConfirmPassword}</InputPassword>
-
+                  onChange={onPasswordChange}> {t.LabelPassword} 
+                </InputPassword>
               </div>
 
               {/* Submit */}
@@ -151,7 +151,7 @@ function LoginPage() {
 
               {/* Switch */}
               <p className="text-sm text-center text-gray-500 pt-2">
-                Sudah punya akun?{" "}
+                Belum punya akun?{" "}
 
                 <Link
                   to="/login"
@@ -162,7 +162,7 @@ function LoginPage() {
                     font-medium
                   "
                 >
-                  Masuk
+                  Registrasi dulu
                 </Link>
               </p>
             </form>

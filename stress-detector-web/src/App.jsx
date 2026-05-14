@@ -11,6 +11,7 @@ export default function App() {
   return (
     <LanguageProvider>
         <Routes>
+          <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

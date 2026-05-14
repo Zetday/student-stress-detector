@@ -17,7 +17,6 @@ import InputPassword from "../components/InputPassword";
 // layouts
 import LeftPanel from "../../layouts/LeftPanel";
 
-
 function RegisterPage() {
   const [name, onNameChange] = useInput("");
   const [email, onEmailChange] = useInput("");
@@ -35,11 +34,12 @@ function RegisterPage() {
       return;
     }
 
-    // const { error } = await register({ name, email, password });
+    const { error } = await register({ name, email, password });
 
-    // if (!error) {
-    //   navigate("/login");
-    // }
+    if (!error) {
+      navigate("/login");
+    }
+
   }
 
   return (
@@ -65,7 +65,9 @@ function RegisterPage() {
         "
       >
         {/* LEFT */}
-        <LeftPanel />
+        <div className="hidden md:block">
+          <LeftPanel />
+        </div>
 
         {/* RIGHT */}
         <div
@@ -77,7 +79,7 @@ function RegisterPage() {
           <div className="w-full max-w-md">
 
             {/* Logo */}
-            <img src={logo} alt="logo cek tenang" className="w-28 mb-6"/>
+            <img src={logo} alt="logo cek tenang" className="w-36 mb-6"/>
 
             {/* Heading */}
             <h2 className="text-4xl font-bold text-white mb-2">
@@ -156,7 +158,7 @@ function RegisterPage() {
                   flex items-center justify-center gap-3
                 "
               >
-                <span>Lanjut dengan Google</span>
+                <span>{t.Google}</span>
                 <img
                   src={google}
                   alt="Google"
@@ -166,7 +168,7 @@ function RegisterPage() {
 
               {/* Switch */}
               <p className="text-sm text-center text-gray-500 pt-2">
-                Sudah punya akun?{" "}
+                {t.LabelLogin}{" "}
 
                 <Link
                   to="/login"
@@ -177,7 +179,7 @@ function RegisterPage() {
                     font-medium
                   "
                 >
-                  Masuk
+                  {t.LinkLogin}
                 </Link>
               </p>
             </form>
