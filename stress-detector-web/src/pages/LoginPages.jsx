@@ -17,7 +17,6 @@ import InputPassword from "../components/InputPassword";
 // layouts
 import LeftPanel from "../../layouts/LeftPanel";
 
-
 function LoginPage() {
   const [name, onNameChange] = useInput("");
   const [email, onEmailChange] = useInput("");
@@ -58,8 +57,10 @@ function LoginPage() {
         "
       >
         {/* LEFT */}
-        <LeftPanel />
-
+        <div className="hidden md:block">
+          <LeftPanel />
+        </div>
+        
         {/* RIGHT */}
         <div
           className="
@@ -70,11 +71,11 @@ function LoginPage() {
           <div className="w-full max-w-md">
 
             {/* Logo */}
-            <img src={logo} alt="logo cek tenang" className="w-28 mb-6"/>
+            <img src={logo} alt="logo cek tenang" className="w-36 mb-6"/>
 
             {/* Heading */}
             <h2 className="text-4xl font-bold text-white mb-2">
-              {t.Create}
+              {t.Login}
             </h2>
 
             <p className="text-sm text-gray-400 mb-10">
@@ -86,11 +87,6 @@ function LoginPage() {
               onSubmit={onSubmitHandler}
               className="space-y-6"
             >
-              {/* Name */}
-              <InputName
-                name={name}
-                onChange={onNameChange}
-              />
 
               {/* Email */}
               <InputEmail
@@ -99,17 +95,19 @@ function LoginPage() {
               />
 
               {/* Password Grid */}
-              <div className="grid gap-4">
+              <div className="grid gap-4 mb-4">
                 <InputPassword
                   label={t?.password || "Kata Sandi"}
                   value={password}
                   onChange={onPasswordChange}> {t.LabelPassword} 
                 </InputPassword>
+
+              <span className="text-red-600 text-right mb-2"><Link to="/resetpassword">{t.ResetPassword}</Link></span>
               </div>
 
               {/* Submit */}
               <ButtonSubmit type="submit">
-                {t.SubmitRegister}
+                {t.SubmitLogin}
               </ButtonSubmit>
 
               {/* Divider */}
@@ -141,7 +139,7 @@ function LoginPage() {
                   flex items-center justify-center gap-3
                 "
               >
-                <span>Lanjut dengan Google</span>
+                <span>{t.Google}</span>
                 <img
                   src={google}
                   alt="Google"
@@ -151,10 +149,10 @@ function LoginPage() {
 
               {/* Switch */}
               <p className="text-sm text-center text-gray-500 pt-2">
-                Belum punya akun?{" "}
+                {t.LabelRegister}{" "}
 
                 <Link
-                  to="/login"
+                  to="/register"
                   className="
                     text-[#9BB3FF]
                     hover:text-white
@@ -162,7 +160,7 @@ function LoginPage() {
                     font-medium
                   "
                 >
-                  Registrasi dulu
+                  {t.LinkRegister}
                 </Link>
               </p>
             </form>

@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom"
 //Pages
 import RegisterPage from "./pages/RegisterPages"
 import LoginPage from "./pages/LoginPages"
+import ResetPassword from "./pages/ResetPassword"
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
         </Routes>
     </LanguageProvider>
   )

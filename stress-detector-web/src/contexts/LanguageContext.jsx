@@ -5,13 +5,13 @@ const LanguageContext = createContext();
 const translations = {
   id: {
     // LeftPanel
-    Heading1: "Analisis Klinis Untuk",
-    Heading2: "Keseimbangan Anda.",
-    Deskripsi: "Optimalkan kesehatan mental Anda dengan teknologi analisis biometrik tercanggih untuk performa yang lebih tenang dan terukur.",
-    Subheading1: "Analisis Biometrik Real-time",
-    Subdeskripsi1: "Pantau fluktuasi kortisol secara instan dengan akurasi dengan teknologi Artificial Intelligence.",
-    Subheading2: "Laporan Klinis Harian dan Mingguan",
-    Subdeskripsi2: "Dapatkan ringkasan data mendalam yang disusun oleh algoritma medis untuk performa optimal.",
+    Heading1: "Analisis Tingkat Stres Berbasis AI",
+    Heading2: "Untuk Kesehatan Mental Anda.",
+    Deskripsi: "Pantau kondisi mental Anda melalui evaluasi aktivitas dan kebiasaan harian menggunakan teknologi Artificial Intelligence secara real-time.",
+    Subheading1: "Cek Stress Harian",
+    Subdeskripsi1: "AI menganalisis jawaban questionnaire harian untuk memperkirakan tingkat stres secara cepat dan akurat.",
+    Subheading2: "Laporan & Insight Personal",
+    Subdeskripsi2: "Dapatkan ringkasan kondisi stres serta rekomendasi harian untuk membantu menjaga kesehatan mental Anda",
 
     // Register Pages
     Create: "Buat Akun",
@@ -27,18 +27,22 @@ const translations = {
     Google: "Lanjut Dengan Google",
 
     // Login Pages
-    
+    Login: "Masuk",
+    LabelRegister: "Belum punya akun?",
+    LinkRegister: "Daftar",
+    SubmitLogin: "Masuk Sekarang",
+    ResetPassword: "Lupa Password",
 
   },
   en: {
     // LeftPanel
-    Heading1: "Clinical Analysis For",
-    Heading2: "Your Balance.",
-    Deskripsi: "Optimize your mental health with state-of-the-art biometric analysis technology for calmer, more measured performance.",
-    Subheading1: "Real-time Biometric Analysis",
-    Subdeskripsi1: "Monitor cortisol fluctuations instantly with accuracy with Artificial Intelligence technology.  ",
-    Subheading2: "Weekly Clinical Report",
-    Subdeskripsi2: "Get in-depth data summaries compiled by medical algorithms for optimal performance.",
+    Heading1: "AI-Based Stress Level Analysis",
+    Heading2: "For Your Mental Health.",
+    Deskripsi: "Monitor your mental state through real-time evaluation of daily activities and habits using Artificial Intelligence technology.",
+    Subheading1: "Daily Stress Check",
+    Subdeskripsi1: "AI analyzes daily questionnaire responses to quickly and accurately estimate stress levels.",
+    Subheading2: "Personal Reports & Insights",
+    Subdeskripsi2: "Get a summary of stress conditions and daily recommendations to help maintain your mental health.",
 
     //Register Pages
     Create: "Create Account",
@@ -53,7 +57,12 @@ const translations = {
     LinkLogin: "Login here",
     Google: "Continue With Google",
 
-
+    // Login Pages
+    Login: "Login",
+    LabelRegister: "Don't have an account?",
+    LinkRegister: "Register",
+    SubmitLogin: "Login Now",
+    ResetPassword: "Forgot Password",
   },
 };
 
