@@ -1,6 +1,6 @@
 // Sistem
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import { useLanguage } from "../contexts/LanguageContext";
 
@@ -13,25 +13,54 @@ import ButtonSubmit from "../components/ButtonSubmit";
 import InputEmail from "../components/InputEmail";
 import InputName from "../components/InputName";
 import InputPassword from "../components/InputPassword";
+import { login } from "../services/authService";
 
 // layouts
 import LeftPanel from "../../layouts/LeftPanel";
 
 function LoginPage() {
-  const [name, onNameChange] = useInput("");
   const [email, onEmailChange] = useInput("");
   const [password, onPasswordChange] = useInput("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [apiError, setApiError] = useState("");
 
   const { t } = useLanguage();
 
-  function onSubmitHandler(e) {
-    e.preventDefault();
+  function handleEmailChange(e) {
+    onEmailChange(e);
+    setApiError("");
+    setEmailError("");
+  }
 
-    console.log({
-      name,
-      email,
-      password,
-    });
+  function handlePasswordChange(e) {
+    onPasswordChange(e);
+    setApiError("");
+    setPasswordError("");
+  }
+
+  async function onSubmitHandler(e) {
+    e.preventDefault();
+    setApiError("");
+    setEmailError("");
+    setPasswordError("");
+
+    const { error, data, message } = await login({ email, password });
+
+    if (error) {
+      if (message.toLowerCase().includes("kredensial")) {
+        setPasswordError("Email atau password salah.");
+      } else if (message.toLowerCase().includes("email")) {
+        setEmailError(message);
+      } else {
+        setApiError(message);
+      }
+
+      return;
+    }
+
+    localStorage.setItem("accessToken", data.accessToken);
+    localStorage.setItem("refreshToken", data.refreshToken);
   }
 
   return (
@@ -89,21 +118,32 @@ function LoginPage() {
             >
 
               {/* Email */}
-              <InputEmail
-                email={email}
-                onChange={onEmailChange}
+             <InputEmail
+                value={email}
+                onChange={handleEmailChange}
+                error={emailError}
+                placeholder={t.InputEmail}
+                children="Email"
               />
 
               {/* Password Grid */}
               <div className="grid gap-4 mb-4">
                 <InputPassword
-                  label={t?.password || "Kata Sandi"}
                   value={password}
-                  onChange={onPasswordChange}> {t.LabelPassword} 
+                  autoComplete="current-password"
+                  onChange={handlePasswordChange}
+                  error={passwordError}
+                  placeholder="******"> {t.LabelPassword} 
                 </InputPassword>
 
               <span className="text-red-600 text-right mb-2"><Link to="/resetpassword">{t.ResetPassword}</Link></span>
               </div>
+
+              {apiError && (
+                <p className="text-sm text-red-500">
+                  {apiError}
+                </p>
+              )}
 
               {/* Submit */}
               <ButtonSubmit type="submit">

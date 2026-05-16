@@ -33,6 +33,12 @@ const translations = {
     SubmitLogin: "Masuk Sekarang",
     ResetPassword: "Lupa Password",
 
+    // Reset Password Pages
+    HeadingResetPassword: "Lupa Kata Sandi?",
+    DeskripsiResetPassword: "Masukkan email yang terdaftar untuk menerima instruksi reset kata sandi.",
+    ButtonResetPassword: "Kirim Tautan Pemulih",
+    BackToLogin: "Kembali ke Login",
+
   },
   en: {
     // LeftPanel
@@ -63,6 +69,13 @@ const translations = {
     LinkRegister: "Register",
     SubmitLogin: "Login Now",
     ResetPassword: "Forgot Password",
+
+    // Reset Password Pages
+    HeadingResetPassword: "Forgot Password?",
+    DeskripsiResetPassword: "Enter your registered email to receive password reset instructions.",
+    ButtonResetPassword: "Send Recovery Link",
+    BackToLogin: "Return to Login",
+
   },
 };
 

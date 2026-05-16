@@ -1,5 +1,5 @@
 // Sistem
-import React from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import { useLanguage } from "../contexts/LanguageContext";
@@ -13,6 +13,7 @@ import ButtonSubmit from "../components/ButtonSubmit";
 import InputEmail from "../components/InputEmail";
 import InputName from "../components/InputName";
 import InputPassword from "../components/InputPassword";
+import { register } from "../services/authService";
 
 // layouts
 import LeftPanel from "../../layouts/LeftPanel";
@@ -22,23 +23,79 @@ function RegisterPage() {
   const [email, onEmailChange] = useInput("");
   const [password, onPasswordChange] = useInput("");
   const [confirmPassword, onConfirmPasswordChange] = useInput("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [apiError, setApiError] = useState("");
 
   const { t } = useLanguage();
   const navigate = useNavigate();
 
+  function validatePassword(value) {
+    if (value.length < 8) {
+      return "Password minimal harus 8 karakter.";
+    }
+
+    if (!/\d/.test(value)) {
+      return "Password harus memiliki minimal 1 angka.";
+    }
+
+    if (!/[!@#$%^&*(),.?":{}|<>-_]/.test(value)) {
+      return "Password harus memiliki minimal 1 karakter khusus.";
+    }
+
+    return "";
+  }
+
+  function handlePasswordChange(e) {
+    onPasswordChange(e);
+    setApiError("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+  }
+
+  function handleConfirmPasswordChange(e) {
+    onConfirmPasswordChange(e);
+    setApiError("");
+    setConfirmPasswordError("");
+  }
+
+  function handleEmailChange(e) {
+    onEmailChange(e);
+    setApiError("");
+    setEmailError("");
+  }
+
   async function onSubmitHandler(e) {
     e.preventDefault();
+    setApiError("");
+    setEmailError("");
 
-    if (password !== confirmPassword) {
-      alert("Password dan konfirmasi password tidak cocok!");
+    const validationMessage = validatePassword(password);
+
+    if (validationMessage) {
+      setPasswordError(validationMessage);
       return;
     }
 
-    const { error } = await register({ name, email, password });
-
-    if (!error) {
-      navigate("/login");
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Password dan konfirmasi password tidak cocok!");
+      return;
     }
+
+    const { error, message } = await register({ name, email, password });
+
+    if (error) {
+      if (message.toLowerCase().includes("email")) {
+        setEmailError(message);
+      } else {
+        setApiError(message);
+      }
+
+      return;
+    }
+
+    navigate("/login");
 
   }
 
@@ -97,32 +154,47 @@ function RegisterPage() {
             >
               {/* Name */}
               <InputName
-                name={name}
+                value={name}
                 onChange={onNameChange}
+                children={t.LabelName}
+                placeholder={t.InputName}
               />
 
               {/* Email */}
               <InputEmail
-                email={email}
-                onChange={onEmailChange}
+                value={email}
+                onChange={handleEmailChange}
+                error={emailError}
+                placeholder={t.InputEmail}
+                children="Email"
               />
 
               {/* Password Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                 <InputPassword
-                  label={t?.password || "Kata Sandi"}
                   value={password}
-                  onChange={onPasswordChange}> {t.LabelPassword} </InputPassword>
+                  autoComplete="new-password"
+                  onChange={handlePasswordChange}
+                  error={passwordError}
+                  placeholder="******"> 
+                  {t.LabelPassword} 
+                </InputPassword>
 
                 <InputPassword
-                  label={
-                    t?.confirmPassword || "Konfirmasi"
-                  }
                   value={confirmPassword}
-                  onChange={onConfirmPasswordChange}
-                >{t.LabelConfirmPassword}</InputPassword>
-
+                  autoComplete="new-password"
+                  onChange={handleConfirmPasswordChange}
+                  error={confirmPasswordError}
+                  placeholder="******">
+                  {t.LabelConfirmPassword}
+                </InputPassword>
               </div>
+
+              {apiError && (
+                <p className="text-sm text-red-500">
+                  {apiError}
+                </p>
+              )}
 
               {/* Submit */}
               <ButtonSubmit type="submit">
