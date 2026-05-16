@@ -1,18 +1,14 @@
 // Sistem
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import { useLanguage } from "../contexts/LanguageContext";
 
 // Asset
 import logo from "../assets/img/logo.png";
-import google from "../assets/img/google-color-svgrepo-com.svg"
 
 // Komponent
 import ButtonSubmit from "../components/ButtonSubmit";
 import InputEmail from "../components/InputEmail";
-import InputName from "../components/InputName";
-import InputPassword from "../components/InputPassword";
 
 // layouts
 import LeftPanel from "../../layouts/LeftPanel";
@@ -86,7 +82,7 @@ function ResetPassword() {
 
               {/* Email */}
               <InputEmail
-                email={email}
+                value={email}
                 onChange={onEmailChange}
                 placeholder={t.InputEmail}
                 children="Email"

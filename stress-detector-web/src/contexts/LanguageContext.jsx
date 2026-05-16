@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import { useState, createContext, useContext } from 'react';
 
 const LanguageContext = createContext();
 
@@ -39,6 +39,13 @@ const translations = {
     ButtonResetPassword: "Kirim Tautan Pemulih",
     BackToLogin: "Kembali ke Login",
 
+    // New Password Pages
+    HeadingNewPassword: "Buat Kata Sandi Baru",
+    DeskripsiNewPassword: "Silakan masukkan kata sandi baru untuk akun Anda.",
+    ButtonNewPassword: "Perbarui Kata Sandi",
+    LabelNewPassword: "Kata Sandi Baru",
+    LabelConfirmNewPassword: "Konfirmasi Kata Sandi Baru" ,
+
   },
   en: {
     // LeftPanel
@@ -76,6 +83,12 @@ const translations = {
     ButtonResetPassword: "Send Recovery Link",
     BackToLogin: "Return to Login",
 
+    // New Password Pages
+    HeadingNewPassword: "Create New Password",
+    DeskripsiNewPassword: "Please enter a new password for your account.",
+    ButtonNewPassword: "Update Password",
+    LabelNewPassword: "New Password",
+    LabelConfirmNewPassword: "Confirm New Password",
   },
 };
 
@@ -105,4 +118,5 @@ function useLanguage() {
   return useContext(LanguageContext);
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { LanguageContext, LanguageProvider, useLanguage };

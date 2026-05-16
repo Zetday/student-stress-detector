@@ -40,7 +40,7 @@ function RegisterPage() {
       return "Password harus memiliki minimal 1 angka.";
     }
 
-    if (!/[!@#$%^&*(),.?":{}|<>-_]/.test(value)) {
+    if (!/[!@#$%^&*(),.?":{}|<>\-_]/.test(value)) {
       return "Password harus memiliki minimal 1 karakter khusus.";
     }
 

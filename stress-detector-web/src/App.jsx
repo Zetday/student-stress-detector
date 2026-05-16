@@ -1,5 +1,3 @@
-// import React from "react"
-import LeftPanel from "../layouts/LeftPanel"
 import { LanguageProvider } from "./contexts/LanguageContext"
 import { Route, Routes } from "react-router-dom"
 
@@ -7,6 +5,7 @@ import { Route, Routes } from "react-router-dom"
 import RegisterPage from "./pages/RegisterPages"
 import LoginPage from "./pages/LoginPages"
 import ResetPassword from "./pages/ResetPassword"
+import NewPassword from "./pages/NewPassword"
 
 export default function App() {
   return (
@@ -16,6 +15,7 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/newpassword" element={<NewPassword />} />
         </Routes>
     </LanguageProvider>
   )

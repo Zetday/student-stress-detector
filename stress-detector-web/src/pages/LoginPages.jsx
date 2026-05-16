@@ -11,7 +11,6 @@ import google from "../assets/img/google-color-svgrepo-com.svg"
 // Komponent
 import ButtonSubmit from "../components/ButtonSubmit";
 import InputEmail from "../components/InputEmail";
-import InputName from "../components/InputName";
 import InputPassword from "../components/InputPassword";
 import { login } from "../services/authService";
 
