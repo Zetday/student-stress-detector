@@ -6,7 +6,7 @@ class ProducerService {
     const pass = process.env.RABBITMQ_PASSWORD || 'guest';
     const host = process.env.RABBITMQ_HOST || 'localhost';
     const port = process.env.RABBITMQ_PORT || '5672';
-    
+
     this.amqpUri = `amqp://${user}:${pass}@${host}:${port}`;
   }
 
@@ -16,7 +16,7 @@ class ProducerService {
     try {
       connection = await amqp.connect(this.amqpUri);
       channel = await connection.createChannel();
-      
+
       await channel.assertQueue(queue, {
         durable: true,
       });

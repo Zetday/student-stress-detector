@@ -78,7 +78,7 @@ class Consumer {
     if (type === 'daily') {
       const prediction =
         await PredictionRepositories.getLatestPrediction(userId);
-      let htmlContent = '';
+      let htmlContent;
 
       if (!prediction) {
         htmlContent = this.getEmptyDailyTemplate(userName);
@@ -98,7 +98,7 @@ class Consumer {
       const recommendation =
         await RecommendationRepositories.getLatestRecommendation(userId);
 
-      let htmlContent = '';
+      let htmlContent;
       if (!summary) {
         htmlContent = this.getEmptyWeeklyTemplate(userName);
       } else {
@@ -113,7 +113,7 @@ class Consumer {
       await this.transporter.sendMail({
         from: '"CekTenang Team" <no-reply@cektenang.id>',
         to: targetEmail,
-        subject: `[CekTenang] Ringkasan & Rekomendasi Kesehatan Mental Mingguan Anda`,
+        subject: '[CekTenang] Ringkasan & Rekomendasi Kesehatan Mental Mingguan Anda',
         html: htmlContent,
       });
     }
@@ -215,7 +215,6 @@ class Consumer {
     const avgStress = parseFloat(summary.average_stress_level).toFixed(1);
     const avgSleep = parseFloat(summary.average_sleep_hours).toFixed(1);
     const avgScreen = parseFloat(summary.average_screen_time_hours).toFixed(1);
-    const avgStudy = parseFloat(summary.average_study_hours).toFixed(1);
     const trend = summary.stress_trend || 'stable';
 
     const startDateStr = new Date(summary.week_start).toLocaleDateString(
@@ -240,6 +239,21 @@ class Consumer {
       trendText = 'Memburuk (Meningkat)';
       trendColor = '#ef4444';
     }
+
+    const insightHtml = insight ? `
+      <div style="border-left: 4px solid hsl(174, 60%, 40%); background-color: #f0fdfa; padding: 20px; border-radius: 0 12px 12px 0; margin-bottom: 24px;">
+        <h3 style="color: hsl(174, 70%, 30%); margin: 0 0 8px 0; font-size: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Wawasan AI Anda</h3>
+        <p style="color: #111827; font-size: 14.5px; line-height: 1.6; margin: 0;">"${insight.insight_text}"</p>
+      </div>
+    ` : '';
+
+    const recommendationHtml = recommendation ? `
+      <div style="background-color: #fcf8f2; border: 1px solid #f3e8d3; padding: 20px; border-radius: 12px; margin-bottom: 32px;">
+        <h3 style="color: #b45309; margin: 0 0 8px 0; font-size: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">💡 Rekomendasi Terapi</h3>
+        <span style="display: inline-block; background-color: #fef3c7; color: #b45309; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; margin-bottom: 12px;">Kategori: ${recommendation.category || 'Umum'}</span>
+        <p style="color: #451a03; font-size: 14.5px; line-height: 1.6; margin: 0;">${recommendation.recommendation_text}</p>
+      </div>
+    ` : '';
 
     return `
       <!DOCTYPE html>
@@ -299,29 +313,10 @@ class Consumer {
             </div>
 
             <!-- Insight Box -->
-            ${
-              insight
-                ? `
-              <div style="border-left: 4px solid hsl(174, 60%, 40%); background-color: #f0fdfa; padding: 20px; border-radius: 0 12px 12px 0; margin-bottom: 24px;">
-                <h3 style="color: hsl(174, 70%, 30%); margin: 0 0 8px 0; font-size: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">Wawasan AI Anda</h3>
-                <p style="color: #111827; font-size: 14.5px; line-height: 1.6; margin: 0;">"${insight.insight_text}"</p>
-              </div>
-            `
-                : ''
-            }
+            ${insightHtml}
 
             <!-- Recommendation Box -->
-            ${
-              recommendation
-                ? `
-              <div style="background-color: #fcf8f2; border: 1px solid #f3e8d3; padding: 20px; border-radius: 12px; margin-bottom: 32px;">
-                <h3 style="color: #b45309; margin: 0 0 8px 0; font-size: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">💡 Rekomendasi Terapi</h3>
-                <span style="display: inline-block; background-color: #fef3c7; color: #b45309; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; margin-bottom: 12px;">Kategori: ${recommendation.category || 'Umum'}</span>
-                <p style="color: #451a03; font-size: 14.5px; line-height: 1.6; margin: 0;">${recommendation.recommendation_text}</p>
-              </div>
-            `
-                : ''
-            }
+            ${recommendationHtml}
 
             <div style="border-top: 1px solid #f3f4f6; padding-top: 24px; text-align: center;">
               <a href="https://cektenang.id/dashboard" style="display: inline-block; background-color: hsl(174, 60%, 40%); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">Buka Riwayat Lengkap</a>
