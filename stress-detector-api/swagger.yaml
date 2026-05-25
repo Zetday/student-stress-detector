@@ -288,6 +288,66 @@ paths:
         '200':
           description: Logged out successfully
 
+  /authentications/forgot-password:
+    post:
+      summary: Request password reset link (Forgot Password)
+      tags: [Authentications]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+      responses:
+        '200':
+          description: Recovery link sent to email successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Validation error
+        '404':
+          description: Email not registered
+
+  /authentications/reset-password:
+    post:
+      summary: Reset password using recovery token
+      tags: [Authentications]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token:
+                  type: string
+                  example: Odq95tAc_UR0TyKIoqakTqZ7eGjIuCCW
+                password:
+                  type: string
+                  format: password
+                  minLength: 6
+                  example: newpassword123
+      responses:
+        '200':
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Invalid token or expired, or validation error
+
   # ─── PROFILES ─────────────────────────────────────────────────────────────
   /profiles/me:
     get:

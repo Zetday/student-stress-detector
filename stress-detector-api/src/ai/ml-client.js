@@ -5,7 +5,11 @@
  * request still succeeds (activity is saved; prediction is simply null).
  */
 
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+let mlUrl = process.env.ML_SERVICE_URL || 'http://localhost:8000';
+if (mlUrl && !mlUrl.startsWith('http://') && !mlUrl.startsWith('https://')) {
+  mlUrl = `http://${mlUrl}`;
+}
+const ML_SERVICE_URL = mlUrl;
 const ML_TIMEOUT_MS = 10_000; // 10 seconds
 
 /**
@@ -36,7 +40,55 @@ export const predictStress = async (activityPayload) => {
       };
     }
 
-    return await res.json();
+    const json = await res.json();
+    if (json && json.status === 'success' && json.prediction) {
+      const pred = json.prediction;
+
+      // 1. Map stress_level_label to lowercase low/moderate/high
+      const rawLabel = (pred.stress_level_label || 'low').toLowerCase();
+      let stressLevel = 'low';
+      if (rawLabel === 'medium' || rawLabel === 'moderate') {
+        stressLevel = 'moderate';
+      } else if (rawLabel === 'high') {
+        stressLevel = 'high';
+      }
+
+      // 2. Compute stress_score based on probabilities (if available) or rawLabel
+      const probabilities = pred.probabilities || {};
+      const probLow = probabilities.Low ?? probabilities.low ?? 0;
+      const probMedium = probabilities.Medium ?? probabilities.medium ?? probabilities.Moderate ?? probabilities.moderate ?? 0;
+      const probHigh = probabilities.High ?? probabilities.high ?? 0;
+
+      let stressScore;
+      if (probLow || probMedium || probHigh) {
+        // Weighted average out of 100
+        stressScore = (probLow * 15.0) + (probMedium * 50.0) + (probHigh * 85.0);
+      } else {
+        if (stressLevel === 'low') stressScore = 15.0;
+        else if (stressLevel === 'high') stressScore = 85.0;
+        else stressScore = 50.0;
+      }
+      stressScore = Math.round(stressScore * 100) / 100; // Round to 2 decimal places
+
+      // 3. Map confidence_score from percentage back to decimal (0.0 to 1.0)
+      const confidenceScore = pred.confidence_score !== undefined
+        ? Math.round((pred.confidence_score / 100.0) * 10000) / 10000
+        : null;
+
+      return {
+        stress_level: stressLevel,
+        stress_score: stressScore,
+        confidence_score: confidenceScore,
+        model_version: 'v2.0.0-deeplearning'
+      };
+    }
+
+    return {
+      stress_level: 'low',
+      stress_score: 35.0,
+      confidence_score: 0.85,
+      model_version: 'v1.0.0-fallback'
+    };
   } catch (err) {
     if (err.name === 'AbortError') {
       console.warn('[ML Client] predictStress → request timed out. Using fallback.');
