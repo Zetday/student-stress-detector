@@ -59,7 +59,7 @@ export default function LeftPanel() {
               flex items-start gap-4
               rounded-2xl
               border border-white/10
-              bg-white/[0.03]
+              bg-white/(0.03)
               px-5 py-5
               backdrop-blur-sm
             "
@@ -97,7 +97,7 @@ export default function LeftPanel() {
               flex items-start gap-4
               rounded-2xl
               border border-white/10
-              bg-white/[0.03]
+              bg-white/(0.03)
               px-5 py-5
               backdrop-blur-sm
             "
