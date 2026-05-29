@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes, { bool, func } from "prop-types";
 import SidebarItem from "./SidebarItem";
 import logo from "../../assets/img/logo.png";
 import IconsSidebar from "./IconsSidebar";
@@ -6,50 +7,11 @@ import IconsSidebar from "./IconsSidebar";
 // Contexts
 import { useLanguage } from "../../contexts/LanguageContext";
 
-function Sidebar() {
+function Sidebar({ isOpen, setIsOpen }) {
   const { t } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      {/* Hamburger Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-lg bg-[#0B0B0C] text-white shadow-lg md:hidden"
-      >
-        {isOpen ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        )}
-      </button>
-
       {/* Overlay */}
       {isOpen && (
         <div
@@ -61,21 +23,44 @@ function Sidebar() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed left-0 top-0 z-40 flex min-h-screen w-(248px) flex-col
-          bg-[#0B0B0C] px-9 py-10 text-white
+          fixed left-0 top-0 z-40
+          flex h-screen w-52 flex-col
+          bg-[#0B0B0C]
+          px-6 py-8 text-white
           shadow-[18px_0_40px_rgba(0,0,0,0.35)]
           transition-transform duration-300
 
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
 
-          md:relative md:translate-x-0
+          md:translate-x-0
         `}
       >
+   
+      <div className="mb-10 flex items-center justify-between gap-5">
         <img
           src={logo}
           alt="CekTenang"
-          className="mb-12 h-auto w-36 object-contain"
+          className="h-auto w-28 object-contain"
         />
+
+        {/* Close Mobile */}
+        <button
+          onClick={() => setIsOpen(false)}
+          className="
+            flex h-10 w-10 items-center justify-center
+            rounded-xl  
+            border border-white/5
+            bg-white/(0.03)
+            text-white/80
+            transition-all duration-200
+            hover:bg-white/(0.06)
+            hover:text-white
+            md:hidden
+          "
+        >
+          ✕
+        </button>
+      </div>
 
         <nav className="flex flex-1 flex-col">
           <div className="space-y-3">
@@ -240,10 +225,16 @@ function Sidebar() {
               {t.LogoutSdbr}
             </SidebarItem>
           </div>
+
         </nav>
       </aside>
     </>
   );
 }
+
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool,
+  setIsOpen: PropTypes.func,
+};
 
 export default Sidebar;

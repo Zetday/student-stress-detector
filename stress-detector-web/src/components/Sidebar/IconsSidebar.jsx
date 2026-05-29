@@ -1,6 +1,6 @@
 function IconsSidebar({ paths }) {
   return (
-    <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 24 24" className="h-6 w-8" fill="none" aria-hidden="true">
       {paths}
     </svg>
   );

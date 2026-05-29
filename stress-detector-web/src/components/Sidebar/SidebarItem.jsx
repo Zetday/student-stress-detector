@@ -7,16 +7,16 @@ function SidebarItem({ to, icon, children, end = false }) {
       end={end}
       className={({ isActive }) =>
         `
-        flex items-center gap-4 py-3 text-sm font-medium transition-colors
+        flex items-center gap-2 py-3 text-sm font-medium transition-colors
         ${isActive ? "text-blue-500" : "text-zinc-500 hover:text-zinc-200"}
         `
       }
     >
-      <span className="text-2xl place-items-center flex items-center justify-center">
+      <span>
         {icon}
       </span>
       
-      <span className="truncate text-xl leading-normal">
+      <span className="truncate text-[15px] leading-normal">
         {children}
       </span>
 

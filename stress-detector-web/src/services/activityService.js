@@ -2,10 +2,11 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000
 
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem("accessToken");
-  let response;
+
+  let apiResponse;
 
   try {
-    response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    apiResponse = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -20,11 +21,11 @@ async function request(endpoint, options = {}) {
     };
   }
 
-  const result = await response.json().catch(() => ({
+  const result = await apiResponse.json().catch(() => ({
     message: "Response server tidak valid.",
   }));
 
-  if (!response.ok) {
+  if (!apiResponse.ok) {
     return {
       error: true,
       message: result.message || "Terjadi kesalahan pada server.",
@@ -38,6 +39,18 @@ async function request(endpoint, options = {}) {
   };
 }
 
-export function getProfile() {
-  return request("/profiles/me");
+export function getActivities({ limit = 20, offset = 0 } = {}) {
+  const searchParams = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+
+  return request(`/activities?${searchParams.toString()}`);
+}
+
+export function createActivity(activity) {
+  return request("/activities", {
+    method: "POST",
+    body: JSON.stringify(activity),
+  });
 }
