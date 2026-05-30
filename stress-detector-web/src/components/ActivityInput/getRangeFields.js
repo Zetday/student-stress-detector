@@ -9,7 +9,7 @@ function getRangeFields(t, form) {
     {
       name: "assignmentLoad",
       type: "range",
-      min: "1",
+      min: "0",
       max: "10",
       step: "1",
       label: t.ActivityAssignmentLoadTitle,
@@ -21,7 +21,7 @@ function getRangeFields(t, form) {
     {
       name: "deadlinePressure",
       type: "range",
-      min: "1",
+      min: "0",
       max: "10",
       step: "1",
       label: t.DeadlinePressureTitle,
@@ -33,7 +33,7 @@ function getRangeFields(t, form) {
     {
       name: "fatigueLevel",
       type: "range",
-      min: "1",
+      min: "0",
       max: "10",
       step: "1",
       label: t.FatigueLevelTitle,
@@ -45,7 +45,7 @@ function getRangeFields(t, form) {
     {
       name: "moodScore",
       type: "range",
-      min: "1",
+      min: "0",
       max: "10",
       step: "1",
       label: t.MoodScoreTitle,

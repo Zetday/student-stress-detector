@@ -4,7 +4,7 @@ function getRangeStatus(value, t) {
   const score = getNumericValue(value);
 
   if (score >= 8) {
-    return { label: t.HighText, color: "text-red-400" };
+    return { label: t.Hightext, color: "text-red-400" };
   }
 
   if (score >= 6) {

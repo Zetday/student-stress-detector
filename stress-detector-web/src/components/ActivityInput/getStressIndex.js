@@ -8,13 +8,9 @@ function getStressIndex(form) {
   const sleepPenalty = Math.max(0, 8 - getNumericValue(form.sleepHours)) * 4;
   const activityRelief = getNumericValue(form.physicalActivityMinutes) / 6;
 
-  return Math.min(
-    99,
-    Math.max(
-      1,
-      Math.round(18 + deadline + fatigue + assignment + screenTime + sleepPenalty - activityRelief),
-    ),
-  );
+  const score = Math.round(deadline + fatigue + assignment + screenTime + sleepPenalty - activityRelief);
+
+  return Math.min(100, Math.max(0, score));
 }
 
 export default getStressIndex;

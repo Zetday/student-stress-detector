@@ -5,14 +5,14 @@ const initialActivityForm = {
   screenTimeHours: "",
   socialMediaHours: "",
   physicalActivityMinutes: "",
-  caffeineIntakeMg: "80",
-  moodScore: "8",
-  fatigueLevel: "7",
-  assignmentLoad: "5",
-  deadlinePressure: "8",
-  socialInteractionScore: "7",
-  financialWorryScore: "3",
-  healthConditionScore: "8",
+  caffeineIntakeMg: "0",
+  moodScore: "0",
+  fatigueLevel: "0",
+  assignmentLoad: "0",
+  deadlinePressure: "0",
+  socialInteractionScore: "0",
+  financialWorryScore: "0",
+  healthConditionScore: "0",
 };
 
 const activityNumberFields = [

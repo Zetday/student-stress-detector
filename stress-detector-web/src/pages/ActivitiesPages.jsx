@@ -24,7 +24,7 @@ function ActivitiesPage() {
           t={t}
         />
         <ActivityAnalysisPanel form={form} t={t} />
-]      </form>
+      </form>
     </Layout>
   );
 }
