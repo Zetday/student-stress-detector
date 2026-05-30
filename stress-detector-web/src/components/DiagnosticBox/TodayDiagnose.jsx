@@ -115,12 +115,12 @@ function TodayDiagnose({studyTime, taskLoad, deadlinePressure, physicalActivity,
 
         return (
           <div key={index}>
-            <div className="flex justify-between mb-2">
-              <span className="text-zinc-300 text-sm md:text-base uppercase tracking-wider">
+            <div className="flex items-center mb-2">
+              <span className="flex-1 text-zinc-300 text-sm uppercase tracking-wider">
                 {item.label}
               </span>
 
-              <span className="text-zinc-200 text-sm font-medium">
+              <span className="ml-auto text-zinc-200 text-sm font-medium">
                 {metric.display}
               </span>
             </div>

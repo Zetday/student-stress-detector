@@ -96,7 +96,7 @@ function DashboardPage() {
 
     {/* Side Panel */}
     <div className="bg-zinc-800 rounded-2xl p-5 md:p-6">
-      <h2 className="text-lg md:text-xl font-semibold text-white mb-6">
+      <h2 className="text-lg md:text-sm font-semibold text-white mb-6">
         Kondisi hari ini
       </h2>
 

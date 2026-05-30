@@ -44,7 +44,7 @@ function ActivityAnalysisPanel({ form, t }) {
           </h3>
           <div className="space-y-4">
             <ContributorBar
-              label={t.ActivityDeadlinePressureContributor}
+              label={t.DeadlinePressureTitle}
               value={32}
               width={`${Math.max(24, getNumericValue(form.deadlinePressure) * 10)}%`}
             />
