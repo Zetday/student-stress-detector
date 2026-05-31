@@ -30,6 +30,9 @@ class Consumer {
       const connection = await amqp.connect(this.amqpUri);
       const channel = await connection.createChannel();
 
+      // Memastikan consumer hanya memproses 1 pesan sekaligus secara berurutan
+      await channel.prefetch(1);
+
       await channel.assertQueue('export:stress-results', {
         durable: true,
       });
@@ -65,6 +68,9 @@ class Consumer {
     console.log(
       `[Info] Processing export task for User ID: ${userId}, Email: ${targetEmail}, Type: ${type}`,
     );
+
+    // Jeda 2.5 detik untuk menghindari rate limit "Too many emails per second" pada Mailtrap Free Tier
+    await new Promise((resolve) => setTimeout(resolve, 2500));
 
     const userResult = await UserRepositories.getUserById(userId);
     const user = userResult.data;
