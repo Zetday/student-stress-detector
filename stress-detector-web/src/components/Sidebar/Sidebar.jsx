@@ -82,7 +82,7 @@ function Sidebar({ isOpen, setIsOpen }) {
             </SidebarItem>
 
             <SidebarItem
-              to="/activities"
+              to="/activity-history"
               icon={
                 <IconsSidebar
                   paths={
@@ -109,7 +109,7 @@ function Sidebar({ isOpen, setIsOpen }) {
             </SidebarItem>
 
             <SidebarItem
-              to="/prediction"
+              to="/Insight"
               icon={
                 <IconsSidebar
                   paths={
@@ -135,53 +135,6 @@ function Sidebar({ isOpen, setIsOpen }) {
             </SidebarItem>
 
             <SidebarItem
-              to="/recommendations"
-              icon={
-                <IconsSidebar
-                  paths={
-                    <>
-                      <path
-                        d="M12 3v3M12 18v3M3 12h3M18 12h3M6.8 6.8l2.1 2.1M15.1 15.1l2.1 2.1M17.2 6.8l-2.1 2.1M8.9 15.1l-2.1 2.1"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                      />
-                    </>
-                  }
-                />
-              }
-            >
-              {t.ReqomendationSdbr}
-            </SidebarItem>
-
-            <SidebarItem
-              to="/insights"
-              icon={
-                <IconsSidebar
-                  paths={
-                    <>
-                      <path
-                        d="m4 16 4-4 3 3 6-7 3 3"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M4 20h16"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                      />
-                    </>
-                  }
-                />
-              }
-            >
-              Insights
-            </SidebarItem>
-
-            <SidebarItem
               to="/profile"
               icon={
                 <IconsSidebar
@@ -203,7 +156,13 @@ function Sidebar({ isOpen, setIsOpen }) {
           </div>
 
           <div className="mt-auto">
-            <SidebarItem
+            <SidebarItem to="/LogActivity">
+              <div className="bg-[#ADC7FF] text-[#002E68] text-center w-38 h-10 rounded justify-center">
+                <span className="text-2xl ">+ </span> {t.StressCheck}
+                </div>
+            </SidebarItem>
+
+             <SidebarItem
               to="/login"
               icon={
                 <IconsSidebar

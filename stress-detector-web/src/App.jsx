@@ -8,7 +8,11 @@ import LoginPage from "./pages/LoginPages"
 import ResetPassword from "./pages/ResetPassword"
 import NewPassword from "./pages/NewPassword"
 import DashboardPage from "./pages/DashboardPages"
-import ActivitiesPage from "./pages/ActivitiesPages"
+import LogActivitiesPage from "./pages/LogActivitiesPages"
+import ActivityHistoryPage from "./pages/ActivityHistoryPage"
+import InsightPage from "./pages/InsightsPage"
+import ProfilePage from "./pages/ProfilePage"
+
 
 export default function App() {
   return (
@@ -17,7 +21,11 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/activities" element={<ActivitiesPage />} />
+          <Route path="/LogActivity" element={<LogActivitiesPage />} />
+          <Route path="/activity-history" element={<ActivityHistoryPage />} />
+          <Route path="/Insight" element={<InsightPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+
 
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />

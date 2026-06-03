@@ -20,7 +20,7 @@ const translations = {
     PhysicalActivityTitle: "Aktivitas Fisik",
     MoodScoreTitle: "Skor Suasana Hati",
     FatigueLevelTitle: "Tingkat Kelelahan",
-    NewInsight: "Insight terbaru",
+    NewInsight: "Rekomendasi untuk Anda",
 
     // LeftPanel
     Heading1: "Analisis Tingkat Stres Berbasis AI",
@@ -66,9 +66,10 @@ const translations = {
 
     // Sidebar
     ActSdbr: "Catatan Aktivitas",
-    CekStresSdbr: "Cek Stres",
+    CekStresSdbr: "Insights & Rekomendasi",
     ReqomendationSdbr: "Rekomendasi",
     ProfileSdbr: "Profile Saya",
+    StressCheck: "Cek Stres Baru",
     LogoutSdbr: "Keluar",
 
     // Catat Aktivitas Pages
@@ -90,11 +91,16 @@ const translations = {
     ActivityBadLabel: "Buruk",
     ActivityVeryGoodLabel: "Sangat Baik",
     ActivityQuiteHighStatus: "Cukup Tinggi",
-    ActivitySubmitButton: "Simpan & Kalkulasi Stress Index",
+    ActivitySubmitButton: "Simpan & Prediksi",
     ActivitySubmittingButton: "Menyimpan...",
+    ActivitySaveDraftButton: "Simpan Draft",
+    ActivityDraftSavedMessage: "Draft berhasil disimpan.",
     ActivitySuccessMessage: "Aktivitas berhasil dikirim.",
+    ActivityJournalHeader: "Jurnal Untuk Aktivitas Tanggal",
+    ActivityJournalDescription: "Data ini akan digunakan untuk memprediksi skor stres, menghasilkan insight, dan rekomendasi.",
     ActivityReviewLabel: "Pratinjau Analisis",
     ActivityTodayStatusTitle: "Status Hari Ini",
+    ActivityAnalysisTag: "Analisis",
     ActivityStressRiskHigh: "Risiko Stres Tinggi",
     ActivityStressSummary: "\"Berdasarkan input terbaru, tingkat stres Anda meningkat akibat tekanan deadline dan screen time berlebih.\"",
     ActivityMainContributorTitle: "Kontributor Utama",
@@ -119,7 +125,6 @@ const translations = {
     TaskLoadTitle: "Beban Tugas",
     LastNightSleepTitle: "Tidur (Semalam)",
     MinuteText: "Mnt",
-    PersonalAIRecommendationTitle: "Rekomendasi AI Personal",
     RecommendationDesc: "Berdasarkan analisis terbaru, peningkatan stres Anda sebesar 12% berkorelasi kuat dengan tekanan deadline yang mencapai 90% dan beban tugas yang tinggi. Meskipun mood score Anda tetap positif (8.4), level kelelahan mulai meningkat karena kurang tidur (5.5 jam).",
     StudySuggestionTitle: "Saran Belajar",
     StudySuggestionDesc: "Gunakan teknik Pomodoro untuk 3 jam ke depan guna mengurangi beban kognitif tugas.",
@@ -131,6 +136,47 @@ const translations = {
     TaskAnalysisDesc: "Peningkatan tekanan deadline minggu ini menyebabkan durasi belajar meningkat 2 jam, namun efisiensi menurun karena kelelahan.",
     EmotionalResilienceTitle: "Ketahanan Emosional",
     EmotionalResilienceDesc: "Mood score Anda stabil di 8.4 berkat aktivitas fisik rutin (45 mnt). Ini adalah kunci Anda tetap tenang menghadapi ujian.",
+
+    // prediksi stress
+    PredictionPageTitle: "Prediksi Stres",
+    PredictionTodayScoreLabel: "Skor Hari Ini",
+    PredictionAverageLabel: "Rata-rata 7 Hari",
+    PredictionLowestLabel: "Skor Terendah",
+    PredictionHighestLabel: "Skor Tertinggi",
+    PredictionTrendTitle: "Tren Prediksi 7 Hari",
+    PredictionWeeklyAnalysisTitle: "Analisis Mingguan",
+    PredictionWeeklyAnalysisDescription: "Lanjutan stres terdeteksi pada hari Sabtu dan Minggu. Pola ini menunjukkan bahwa kesehatan mental Anda sering terganggu dengan apakah evakuasi mingguan dan persiapan awal minggu.",
+    PredictionModuleSuggestion: "Modifikasi Saran",
+    PredictionHistoryTitle: "Riwayat Prediksi",
+    PredictionHistoryTableDate: "Tanggal",
+    PredictionHistoryTableScore: "Skor",
+    PredictionHistoryTableLevel: "Level",
+    PredictionHistoryTableActivity: "Aktivitas Terkait",
+    PredictionExportPdf: "Export PDF",
+    PredictionFilterData: "Filter Data",
+    PredictionLastUpdate: "Pembaruan Terakhir",
+
+    // Profile Pages
+    ProfilePageTitle: "Profile Saya",
+    AccountProfileLabel: "Account Profile",
+    EditPhotoButton: "Edit Foto",
+    AccountInformationTitle: "Informasi Akun",
+    FullNameLabel: "Full Name",
+    EmailAddressLabel: "Email Address",
+    UpdateInformationButton: "Update Information",
+    AccountStatisticsTitle: "Statistik Akun",
+    TotalAnalysisEntriesTitle: "Total Analysis Entries",
+    AverageStressScoreTitle: "Average Stress Score",
+    OptimalClinicalRangeText: "Optimal clinical range detected",
+    ActiveStreakTitle: "Active Streak",
+    ChangePasswordTitle: "Ubah Password",
+    CurrentPasswordLabel: "Current Password",
+    NewPasswordLabel: "New Password",
+    ConfirmPasswordLabel: "Confirm Password",
+    ResetPasswordButton: "Reset Password",
+    DangerZoneTitle: "Danger Zone",
+    DangerZoneDescription: "Deactivating your account will permanently delete all clinical stress history and data insights.",
+    DeactivateAccountButton: "Deactivate Account",
 
   },
 
@@ -151,7 +197,7 @@ const translations = {
     PhysicalActivityTitle: "Physical Activity",
     MoodScoreTitle: "Mood Score",
     FatigueLevelTitle: "Fatigue Level",
-    NewInsight: "Latest Insight",
+    NewInsight: "Recommendation for you",
 
     // LeftPanel
     Heading1: "AI-Based Stress Level Analysis",
@@ -197,9 +243,10 @@ const translations = {
 
     // Sidebar
     ActSdbr: "Activity Log",
-    CekStresSdbr: "Stress Check",
+    CekStresSdbr: "Insights & Recommendations",
     ReqomendationSdbr: "Recommendation",
     ProfileSdbr: "My Profile",
+    StressCheck: "New Stress Check",
     LogoutSdbr: "Logout",
 
     // Catat Aktivitas Pages
@@ -221,9 +268,11 @@ const translations = {
     ActivityBadLabel: "Bad",
     ActivityVeryGoodLabel: "Very Good",
     ActivityQuiteHighStatus: "Quite High",
-    ActivitySubmitButton: "Save & Calculate Stress Index",
+    ActivitySubmitButton: "Save & Predict",
     ActivitySubmittingButton: "Saving...",
     ActivitySuccessMessage: "Activity submitted successfully.",
+    ActivityJournalHeader: "Journal Entry for Activity Date",
+    ActivityJournalDescription: "This data will be used to predict stress score, generate insights, and recommendations.",
     ActivityReviewLabel: "Analysis Preview",
     ActivityTodayStatusTitle: "Today's Status",
     ActivityStressRiskHigh: "High Stress Risk",
@@ -252,7 +301,6 @@ const translations = {
     
     LastNightSleepTitle: "Sleep (Last Night)",
     MinuteText: "Min",
-    PersonalAIRecommendationTitle: "Personal AI Recommendation",
     RecommendationDesc: "Based on the latest analysis, your stress level has increased by 12%, strongly correlated with deadline pressure reaching 90% and a high task workload. Although your mood score remains positive (8.4), fatigue levels are starting to rise due to insufficient sleep (5.5 hours).",
     StudySuggestionTitle: "Study Recommendation",
     StudySuggestionDesc: "Use the Pomodoro technique for the next 3 hours to reduce cognitive workload.",
@@ -265,6 +313,75 @@ const translations = {
     EmotionalResilienceTitle: "Emotional Resilience",
     EmotionalResilienceDesc: "Your mood score remains stable at 8.4 thanks to regular physical activity (45 min). This is a key factor in helping you stay calm during exams.",
    
+    // prediksi stress
+    PredictionPageTitle: "Stress Prediction",
+    PredictionTodayScoreLabel: "Today's Score",
+    PredictionAverageLabel: "7-Day Average",
+    PredictionLowestLabel: "Lowest Score",
+    PredictionHighestLabel: "Highest Score",
+    PredictionTrendTitle: "7-Day Prediction Trend",
+    PredictionWeeklyAnalysisTitle: "Weekly Analysis",
+    PredictionWeeklyAnalysisDescription: "Continued stress detected on Saturday and Sunday. This pattern shows that your mental health is often disrupted by weekly evaluations and early week preparations.",
+    PredictionModuleSuggestion: "Modify Suggestions",
+    PredictionHistoryTitle: "Prediction History",
+    PredictionHistoryTableDate: "Date",
+    PredictionHistoryTableScore: "Score",
+    PredictionHistoryTableLevel: "Level",
+    PredictionHistoryTableActivity: "Related Activity",
+    PredictionExportPdf: "Export PDF",
+    PredictionFilterData: "Filter Data",
+    PredictionLastUpdate: "Last Update",
+
+    // Profile Pages
+    ProfilePageTitle: "My Profile",
+    AccountProfileLabel: "Account Profile",
+    EditPhotoButton: "Edit Photo",
+    AccountInformationTitle: "Account Information",
+    FullNameLabel: "Full Name",
+    EmailAddressLabel: "Email Address",
+    UpdateInformationButton: "Update Information",
+    AccountStatisticsTitle: "Account Statistics",
+    TotalAnalysisEntriesTitle: "Total Analysis Entries",
+    AverageStressScoreTitle: "Average Stress Score",
+    OptimalClinicalRangeText: "Optimal clinical range detected",
+    ActiveStreakTitle: "Active Streak",
+    ChangePasswordTitle: "Change Password",
+    CurrentPasswordLabel: "Current Password",
+    NewPasswordLabel: "New Password",
+    ConfirmPasswordLabel: "Confirm Password",
+    ResetPasswordButton: "Reset Password",
+    DangerZoneTitle: "Danger Zone",
+    DangerZoneDescription: "Deactivating your account will permanently delete all clinical stress history and data insights.",
+    DeactivateAccountButton: "Deactivate Account",
+
+  },
+
+  // Recommendations (additional keys)
+  rec: {
+    RecommendationPageTitle: "Your Recommendations",
+    RecommendationSubtitle: "Latest analysis shows accumulating task load combined with low HRV. We've adjusted your study strategy for today.",
+    RecommendationHeroTitle: "AI Personal Coach",
+    RecommendationHeroGreeting: "Hello Andi, based on 3 upcoming deadlines this week and your resting heart rate increasing by 5 bpm, you are currently in Academic Distress.",
+    RecommendationHeroBullets: [
+      "Prioritize Calculus tasks today for only 90 minutes. Don't force yourself to finish everything at once.",
+      "Use Deep Work technique between 09:00 - 11:00. This is your best cognitive window today.",
+      "Avoid social media entirely before 17:00 to prevent dopamine fatigue."
+    ],
+    RecommendationHeroButton: "Provide Detailed Strategy",
+
+    PriorityTodayTitle: "Today's Priorities",
+    PriorityViewAll: "View full schedule",
+
+    LongTermTitle: "Long-term Suggestions",
+    SuggestionTimeBlockingTitle: "Time Blocking Strategy",
+    SuggestionTimeBlockingTag: "Productivity",
+    SuggestionTimeBlockingDesc: "Use your calendar to separate study, rest, and social time rigidly to reduce mental confusion.",
+    SuggestionCognitiveTitle: "Cognitive Relaxation Technique",
+    SuggestionCognitiveTag: "Mental",
+    SuggestionCognitiveDesc: "Do 5 minutes of positive visualization every time you start a difficult task.",
+    SuggestionCaffeineTitle: "Academic Caffeine Management",
+    SuggestionCaffeineTag: "Health",
+    SuggestionCaffeineDesc: "Limit coffee only before 12 PM. Excessive caffeine in the afternoon harms your sleep quality."
   },
 };
 

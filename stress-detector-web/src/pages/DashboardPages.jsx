@@ -4,6 +4,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import StressChart from "../components/StresChart/StressChart";
 import calender from  "../assets/icons/calendar.svg"
 import TodayDiagnose from "../components/DiagnosticBox/TodayDiagnose";
+import staricon from "../assets/icons/star.png"
 
 function DashboardPage() {
   const { t } = useLanguage();
@@ -28,13 +29,12 @@ function DashboardPage() {
       </h1>
 
     {/* Today Date */}
-      <p className="text-zinc-400 mt-1 text-sm md:text-base">
+      <p className="text-zinc-400 mt-1 text-sm md:text-sm">
         {formatTanggal}
       </p>
     </div>
 
     {/* Cards */}
-    
       <div className="col-span-1 lg:col-span-4">
         <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
           <div className="flex items-center gap-4">
@@ -50,11 +50,11 @@ function DashboardPage() {
 
             {/* Text */}
             <div>
-              <h2 className="text-xl md:text-2xl font-bold text-zinc-200">
+              <h2 className="text-sm md:text-lg font-bold text-zinc-200">
                 {t.LastJournalSummaryTitle}
               </h2>
 
-              <p className="text-zinc-400 text-lg mt-1">
+              <p className="text-zinc-400 text-sm mt-1">
                 Jumat, 17 April 2026
               </p>
             </div>
@@ -62,6 +62,54 @@ function DashboardPage() {
           </div>
         </div>
       </div>
+
+    {/* Lengkapi catatan */}
+    <div className="col-span-1 lg:col-span-4">
+      <div className="bg-zinc-900 border border-orange-500/40 rounded-xl px-6 py-5">
+        <div className="flex items-center justify-between">
+          
+          {/* Left Content */}
+          <div className="flex items-center gap-4">
+            
+            {/* Icon Box */}
+            <div className="w-10 h-10 rounded-md bg-orange-400 flex items-center justify-center">
+              <img
+                src={calender}
+                alt="calendar"
+                className="w-5 h-5 opacity-80"
+              />
+            </div>
+
+            {/* Text */}
+            <div>
+              <h2 className="text-orange-400 font-semibold text-lg">
+                Catatan Kemarin Belum Lengkap
+              </h2>
+
+              <p className="text-zinc-500 text-sm mt-1">
+                Lengkapi catatan aktivitas agar data diperbarui.
+              </p>
+            </div>
+          </div>
+
+          {/* Button */}
+          <button
+            className="
+              bg-orange-400
+              hover:bg-orange-500
+              text-black
+              font-medium
+              px-6
+              py-3
+              rounded-md
+              transition-colors
+            "
+          >
+            Lihat Detail
+          </button>
+        </div>
+      </div>
+    </div>
 
       <Datas
         metric="Mood"
@@ -107,95 +155,6 @@ function DashboardPage() {
         physicalActivity={45}
         sleep={5.5}
       />
-    </div>
-
-    {/* AI Recommendation */}
-    <div className="col-span-1 lg:col-span-4">
-      <div className="bg-zinc-800 rounded-2xl p-5 md:p-7">
-        <div className="flex items-center gap-3 mb-5">
-          <span className="text-blue-300 text-lg font-bold leading-none">
-            AI
-          </span>
-          <h2 className="text-lg md:text-xl font-semibold text-white">
-            {t.PersonalAIRecommendationTitle}
-          </h2>
-        </div>
-
-        <p className="text-zinc-300 italic text-sm md:text-base leading-relaxed mb-6">
-          "Berdasarkan analisis terbaru, peningkatan stres Anda sebesar{" "}
-          <span className="text-red-500 font-semibold">12%</span> berkorelasi
-          kuat dengan tekanan deadline yang mencapai 90% dan beban tugas yang
-          tinggi. Meskipun mood score Anda tetap positif (8.4), level kelelahan
-          (fatigue) mulai meningkat karena{" "}
-          <span className="text-red-500 font-semibold">kurang tidur</span>{" "}
-          (5.5 jam)."
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-zinc-900/70 rounded-lg p-4">
-            <h3 className="text-[11px] font-bold text-blue-300 uppercase mb-2">
-              Saran Belajar
-            </h3>
-            <p className="text-zinc-300 text-sm leading-relaxed">
-              Gunakan teknik Pomodoro untuk 3 jam ke depan guna mengurangi
-              beban kognitif tugas.
-            </p>
-          </div>
-
-          <div className="bg-zinc-900/70 rounded-lg p-4">
-            <h3 className="text-[11px] font-bold text-green-400 uppercase mb-2">
-              Saran Fisik
-            </h3>
-            <p className="text-zinc-300 text-sm leading-relaxed">
-              Lakukan peregangan 10 menit sekarang untuk menurunkan level
-              kortisol akibat screen time.
-            </p>
-          </div>
-
-          <div className="bg-zinc-900/70 rounded-lg p-4">
-            <h3 className="text-[11px] font-bold text-red-400 uppercase mb-2">
-              Saran Istirahat
-            </h3>
-            <p className="text-zinc-300 text-sm leading-relaxed">
-              Matikan layar 1 jam sebelum tidur pukul 22:00 untuk memulihkan
-              energi esok hari.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* Insight */}
-    <div className="col-span-1 lg:col-span-4">
-      <h2 className="text-xl md:text-2xl font-bold text-white mb-4">
-        {t.NewInsight}
-      </h2>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-        <div className="bg-zinc-800 rounded-2xl p-5 border-l-4 border-red-500">
-          <h3 className="text-base md:text-lg font-semibold text-white mb-2">
-            Kurang tidur terdeteksi
-          </h3>
-
-          <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
-            Tidur 5.5 jam semalam berkontribusi pada peningkatan level
-            kortisol Anda pagi ini sebesar 14%.
-          </p>
-        </div>
-
-        <div className="bg-zinc-800 rounded-2xl p-5 border-l-4 border-emerald-500">
-          <h3 className="text-base md:text-lg font-semibold text-white mb-2">
-            Dampak positif olahraga
-          </h3>
-
-          <p className="text-zinc-400 text-sm md:text-base leading-relaxed">
-            Sesi olahraga 30 menit berhasil menurunkan detak jantung
-            istirahat sebesar 4 bpm.
-          </p>
-        </div>
-
-      </div>
     </div>
 
   </div>

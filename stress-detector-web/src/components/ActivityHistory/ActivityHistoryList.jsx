@@ -1,0 +1,96 @@
+import PropTypes from "prop-types";
+
+const statusBadge = {
+  Selesai: "bg-emerald-500/15 text-emerald-300",
+  Draft: "bg-amber-500/15 text-amber-300",
+  Terlambat: "bg-red-500/15 text-red-300",
+};
+
+const scoreColor = (score) => {
+  if (score >= 70) {
+    return "text-red-300";
+  }
+  if (score >= 40) {
+    return "text-sky-300";
+  }
+  return "text-emerald-300";
+};
+
+function formatDate(date) {
+  return date.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatTime(date) {
+  return date.toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}
+
+function ActivityHistoryList({ items }) {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 text-sm">
+      <div className="hidden grid-cols-[1.3fr_2.4fr_1fr_1fr_0.9fr] gap-4 border-b border-zinc-800 px-5 py-4 text-left text-xs uppercase tracking-[0.24em] text-zinc-500 md:grid">
+        <div>Tanggal & Waktu</div>
+        <div>Preview Insight</div>
+        <div>Skor Stres</div>
+        <div>Status</div>
+        <div>Aksi</div>
+      </div>
+
+      <div className="divide-y divide-zinc-800">
+        {items.map((item) => (
+          <div key={item.id} className="grid gap-3 px-5 py-4 text-sm md:grid-cols-[1.3fr_2.4fr_1fr_1fr_0.9fr] md:items-center">
+            <div>
+              <p className="text-sm font-semibold text-white">{formatDate(item.datetime)}</p>
+              <p className="text-zinc-400 text-xs mt-1">{formatTime(item.datetime)} WIB</p>
+            </div>
+
+            <div>
+              <p className="text-zinc-300">{item.preview}</p>
+            </div>
+
+            <div>
+              <p className={`font-semibold ${scoreColor(item.stressScore)}`}>{item.stressScore}/100</p>
+              <span className="mt-1 inline-flex rounded-full bg-white/5 px-3 py-1 text-xs font-semibold text-zinc-300">
+                {item.scoreLabel}
+              </span>
+            </div>
+
+            <div>
+              <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${statusBadge[item.status]}`}>
+                {item.status}
+              </span>
+            </div>
+
+            <div>
+              <button className="rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm font-semibold text-blue-300 transition hover:border-blue-400 hover:text-white">
+                Lihat Detail
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ActivityHistoryList.propTypes = {
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      datetime: PropTypes.instanceOf(Date),
+      preview: PropTypes.string,
+      stressScore: PropTypes.number,
+      scoreLabel: PropTypes.string,
+      status: PropTypes.string,
+    })
+  ).isRequired,
+};
+
+export default ActivityHistoryList;
