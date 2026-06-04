@@ -3,32 +3,32 @@ import ActivityInput from "./ActivityInput";
 import getInputFields from "./getInputFields";
 import getRangeFields from "./getRangeFields";
 
-function getBadgeByValue(value, fieldName) {
+function getBadgeByValue(value, fieldName, t) {
   const score = Number(value) || 0;
 
   if (score <= 3) {
     return {
-      label: fieldName === "moodScore" ? "Baik" : "Rendah",
+      label: fieldName === "moodScore" ? t.ActivityBadgeGood : t.ActivityBadgeLow,
       badgeClass: "bg-green-500/20 text-green-400",
     };
   }
 
   if (score <= 6) {
     return {
-      label: "Sedang",
+      label: t.ActivityBadgeMedium,
       badgeClass: "bg-yellow-500/20 text-yellow-400",
     };
   }
 
   if (score <= 8) {
     return {
-      label: "Cukup Tinggi",
+      label: t.ActivityBadgeQuiteHigh,
       badgeClass: "bg-orange-500/20 text-orange-400",
     };
   }
 
   return {
-    label: fieldName === "moodScore" ? "Sangat Baik" : "Sangat Tinggi",
+    label: fieldName === "moodScore" ? t.ActivityBadgeVeryGood : t.ActivityBadgeVeryHigh,
     badgeClass: "bg-cyan-500/20 text-cyan-400",
   };
 }
@@ -48,9 +48,9 @@ function ActivityFormPanel({ error, form, isSubmitting, message, onChange, onSav
     <section className="theme-card w-full space-y-6 rounded-2xl p-5 md:p-7">
       <div className="space-y-4">
         <div>
-          <h2 className="theme-text text-2xl font-semibold">Aktivitas Harian</h2>
+          <h2 className="theme-text text-2xl font-semibold">{t.ActivityDailySectionTitle}</h2>
           <p className="theme-muted mt-2 text-sm leading-relaxed">
-            Lengkapi data aktivitas Anda untuk mendapatkan prediksi stres yang lebih akurat.
+            {t.ActivityDailySectionDescription}
           </p>
         </div>
 
@@ -86,9 +86,9 @@ function ActivityFormPanel({ error, form, isSubmitting, message, onChange, onSav
 
       <div className="space-y-4">
         <div>
-          <h2 className="theme-text text-2xl font-semibold">Aktivitas Digital</h2>
+          <h2 className="theme-text text-2xl font-semibold">{t.ActivityDigitalSectionTitle}</h2>
           <p className="theme-muted mt-2 text-sm leading-relaxed">
-            Catat durasi penggunaan layar dan media sosial Anda.
+            {t.ActivityDigitalSectionDescription}
           </p>
         </div>
 
@@ -125,16 +125,16 @@ function ActivityFormPanel({ error, form, isSubmitting, message, onChange, onSav
       <div className="theme-card-muted rounded-2xl border p-6 md:p-8">
         <div className="mb-6">
           <p className="theme-muted text-sm font-semibold uppercase tracking-[0.25em]">
-            Kondisi Akademik & Personal
+            {t.ActivityConditionSectionTitle}
           </p>
           <p className="theme-muted mt-2 text-sm leading-relaxed">
-            Geser slider sesuai kondisi Anda kemarin.
+            {t.ActivityConditionSectionDescription}
           </p>
         </div>
 
         <div className="space-y-6">
           {rangeFields.map((field) => {
-            const { label, badgeClass } = getBadgeByValue(form[field.name], field.name);
+            const { label, badgeClass } = getBadgeByValue(form[field.name], field.name, t);
 
             return (
               <div key={field.name} className="theme-card space-y-4 rounded-2xl p-5">
@@ -175,9 +175,9 @@ function ActivityFormPanel({ error, form, isSubmitting, message, onChange, onSav
 
       <div className="theme-card-muted rounded-2xl border p-5">
         <div className="mb-4">
-          <p className="theme-text text-lg font-semibold">Catatan Harian</p>
+          <p className="theme-text text-lg font-semibold">{t.ActivityDailyNoteTitle}</p>
           <p className="theme-muted mt-2 text-sm leading-relaxed">
-            Ceritakan secara singkat bagaimana hari Anda kemarin.
+            {t.ActivityDailyNoteDescription}
           </p>
         </div>
 
@@ -185,7 +185,7 @@ function ActivityFormPanel({ error, form, isSubmitting, message, onChange, onSav
           name="dailyNote"
           value={form.dailyNote}
           onChange={onChange}
-          placeholder="Contoh: Hari ini saya merasa cukup lelah karena banyak tugas menumpuk, tidur kurang, dan sulit fokus saat belajar."
+          placeholder={t.ActivityDailyNotePlaceholder}
           className="theme-input min-h-45 w-full resize-none rounded-2xl border p-4 text-sm outline-none focus:border-blue-300"
           maxLength={1000}
         />

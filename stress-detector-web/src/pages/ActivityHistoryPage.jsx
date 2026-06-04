@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Layout from "../../layouts/Layout";
 import ActivityHistoryFilters from "../components/ActivityHistory/ActivityHistoryFilters";
 import ActivityHistoryList from "../components/ActivityHistory/ActivityHistoryList";
@@ -14,7 +14,6 @@ const activityHistoryData = [
   {
     id: 1,
     datetime: daysAgo(1),
-    preview: "Terdapat indikasi tekanan akademik meningkat karena deadline tinggi dan tidur kurang...",
     stressScore: 72,
     scoreLabel: "Tinggi",
     status: "Selesai",
@@ -22,7 +21,6 @@ const activityHistoryData = [
   {
     id: 2,
     datetime: daysAgo(2),
-    preview: "Jurnal belum selesai diisi. Lanjutkan pengisian untuk mendapatkan hasil analisis...",
     stressScore: 0,
     scoreLabel: "Belum selesai",
     status: "Draft",
@@ -30,7 +28,6 @@ const activityHistoryData = [
   {
     id: 3,
     datetime: daysAgo(5),
-    preview: "Terdapat pola beban tugas tinggi dan deadline padat yang berkontribusi pada kenaikan stres...",
     stressScore: 72,
     scoreLabel: "Tinggi",
     status: "Terlambat",
@@ -38,7 +35,6 @@ const activityHistoryData = [
   {
     id: 4,
     datetime: daysAgo(8),
-    preview: "Jurnal aktif telah selesai. Sistem merekomendasikan evaluasi jadwal belajar besok...",
     stressScore: 55,
     scoreLabel: "Sedang",
     status: "Selesai",
@@ -46,7 +42,6 @@ const activityHistoryData = [
   {
     id: 5,
     datetime: daysAgo(15),
-    preview: "Tidur cukup semalam membantu menurunkan level stress, namun beban tugas masih perlu dikontrol...",
     stressScore: 48,
     scoreLabel: "Sedang",
     status: "Selesai",
@@ -54,7 +49,6 @@ const activityHistoryData = [
   {
     id: 6,
     datetime: daysAgo(23),
-    preview: "Draft jurnal ditemukan. Lengkapi catatan suasana hati dan deadline agar analisis lebih akurat...",
     stressScore: 0,
     scoreLabel: "Belum selesai",
     status: "Draft",
@@ -62,7 +56,6 @@ const activityHistoryData = [
   {
     id: 7,
     datetime: daysAgo(32),
-    preview: "Pengisian terlalu terlambat. Data ini masih bisa digunakan untuk memantau tren stres bulan lalu...",
     stressScore: 68,
     scoreLabel: "Tinggi",
     status: "Terlambat",
@@ -70,7 +63,6 @@ const activityHistoryData = [
   {
     id: 8,
     datetime: daysAgo(42),
-    preview: "Aktivitas dan pola tidur stabil. Rekomendasi: pertahankan ritme istirahat sebelum tengah malam...",
     stressScore: 36,
     scoreLabel: "Rendah",
     status: "Selesai",
@@ -78,7 +70,6 @@ const activityHistoryData = [
   {
     id: 9,
     datetime: daysAgo(55),
-    preview: "Deadline mendadak membuat jurnal selesai terlambat. Perkirakan kembali durasi pengerjaan tugas...",
     stressScore: 77,
     scoreLabel: "Tinggi",
     status: "Terlambat",
@@ -86,7 +77,6 @@ const activityHistoryData = [
   {
     id: 10,
     datetime: daysAgo(72),
-    preview: "Jurnal selesai, namun kecenderungan kelelahan terlihat. Prioritaskan jeda singkat di tengah sesi belajar...",
     stressScore: 61,
     scoreLabel: "Sedang",
     status: "Selesai",
@@ -94,7 +84,6 @@ const activityHistoryData = [
   {
     id: 11,
     datetime: daysAgo(90),
-    preview: "Draft lama ditemukan. Data ini belum sempurna karena beberapa kolom belum diisi...",
     stressScore: 0,
     scoreLabel: "Belum selesai",
     status: "Draft",

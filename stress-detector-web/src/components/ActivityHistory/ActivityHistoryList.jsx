@@ -32,27 +32,40 @@ function formatTime(date) {
   });
 }
 
-function ActivityHistoryList({ items }) {
+function ActivityHistoryList({ errorMessage = "", isLoading = false, items }) {
   return (
     <div className="theme-card overflow-hidden rounded-3xl border text-sm">
       <div className="theme-subtle theme-border hidden grid-cols-[1.3fr_2.4fr_1fr_1fr_0.9fr] gap-4 border-b px-5 py-4 text-left text-xs uppercase tracking-[0.24em] md:grid">
         <div>Tanggal & Waktu</div>
-        <div>Preview Insight</div>
         <div>Skor Stres</div>
         <div>Status</div>
         <div>Aksi</div>
       </div>
 
       <div className="divide-y divide-[var(--border)]">
+        {isLoading && (
+          <div className="px-5 py-10 text-center theme-muted">
+            Memuat riwayat aktivitas...
+          </div>
+        )}
+
+        {!isLoading && errorMessage && (
+          <div className="px-5 py-10 text-center text-red-400">
+            {errorMessage}
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && items.length === 0 && (
+          <div className="px-5 py-10 text-center theme-muted">
+            Belum ada riwayat aktivitas.
+          </div>
+        )}
+
         {items.map((item) => (
           <div key={item.id} className="grid gap-3 px-5 py-4 text-sm md:grid-cols-[1.3fr_2.4fr_1fr_1fr_0.9fr] md:items-center">
             <div>
               <p className="theme-text text-sm font-semibold">{formatDate(item.datetime)}</p>
               <p className="theme-muted text-xs mt-1">{formatTime(item.datetime)} WIB</p>
-            </div>
-
-            <div>
-              <p className="theme-muted">{item.preview}</p>
             </div>
 
             <div>
@@ -81,11 +94,12 @@ function ActivityHistoryList({ items }) {
 }
 
 ActivityHistoryList.propTypes = {
+  errorMessage: PropTypes.string,
+  isLoading: PropTypes.bool,
   items: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number,
+      id: PropTypes.string,
       datetime: PropTypes.instanceOf(Date),
-      preview: PropTypes.string,
       stressScore: PropTypes.number,
       scoreLabel: PropTypes.string,
       status: PropTypes.string,

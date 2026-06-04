@@ -44,6 +44,16 @@ class UserRepositories {
     return result.rows.length > 0;
   }
 
+  async getUserIdByEmail(email) {
+    const query = {
+      text: 'SELECT id FROM users WHERE email = $1',
+      values: [email],
+    };
+
+    const result = await this.pool.query(query);
+    return result.rows[0]?.id || null;
+  }
+
   async getUserById(id) {
     const cacheKey = `users:${id}`;
 

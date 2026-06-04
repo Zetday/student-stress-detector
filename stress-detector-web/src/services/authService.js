@@ -16,6 +16,16 @@ export const login = async (payload) => {
   }
 };
 
+export const loginWithGoogle = async (payload) => {
+  try {
+    const response = await api.post("/authentications/google", payload);
+    return { error: false, data: response.data.data };
+  } catch (error) {
+    const message = error.response?.data?.message || error.message;
+    return { error: true, message };
+  }
+};
+
 export const logout = async (refreshToken) => {
   const response = await api.delete("/authentications", {
     data: {
@@ -24,4 +34,32 @@ export const logout = async (refreshToken) => {
   });
 
   return response.data.data;
+};
+
+export const requestPasswordReset = async (payload) => {
+  try {
+    const response = await api.post("/authentications/forgot-password", payload);
+    return {
+      error: false,
+      message: response.data.message,
+      data: response.data.data,
+    };
+  } catch (error) {
+    const message = error.response?.data?.message || error.message;
+    return { error: true, message };
+  }
+};
+
+export const resetPassword = async (payload) => {
+  try {
+    const response = await api.post("/authentications/reset-password", payload);
+    return {
+      error: false,
+      message: response.data.message,
+      data: response.data.data,
+    };
+  } catch (error) {
+    const message = error.response?.data?.message || error.message;
+    return { error: true, message };
+  }
 };

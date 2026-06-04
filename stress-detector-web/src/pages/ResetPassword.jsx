@@ -1,7 +1,9 @@
 // Sistem
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import { useLanguage } from "../contexts/LanguageContext";
+import { requestPasswordReset } from "../services/authService";
 
 // Asset
 import logo from "../assets/img/logo.png";
@@ -15,15 +17,41 @@ import LeftPanel from "../../layouts/LeftPanel";
 
 function ResetPassword() {
   const [email, onEmailChange] = useInput("");
+  const [emailError, setEmailError] = useState("");
+  const [apiMessage, setApiMessage] = useState("");
+  const [apiError, setApiError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { t } = useLanguage();
 
-  function onSubmitHandler(e) {
-    e.preventDefault();
+  function handleEmailChange(e) {
+    onEmailChange(e);
+    setEmailError("");
+    setApiError("");
+    setApiMessage("");
+  }
 
-    console.log({
-      email,
-    });
+  async function onSubmitHandler(e) {
+    e.preventDefault();
+    setEmailError("");
+    setApiError("");
+    setApiMessage("");
+
+    if (!email.trim()) {
+      setEmailError("Email wajib diisi.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const { error, message } = await requestPasswordReset({ email });
+    setIsSubmitting(false);
+
+    if (error) {
+      setApiError(message || "Gagal mengirim tautan pemulihan.");
+      return;
+    }
+
+    setApiMessage(message || "Tautan pemulihan telah dikirim ke email Anda.");
   }
 
   return (
@@ -83,14 +111,27 @@ function ResetPassword() {
               {/* Email */}
               <InputEmail
                 value={email}
-                onChange={onEmailChange}
+                onChange={handleEmailChange}
+                error={emailError}
                 placeholder={t.InputEmail}
                 children="Email"
               />
 
+              {apiError && (
+                <p className="text-sm text-red-500">
+                  {apiError}
+                </p>
+              )}
+
+              {apiMessage && (
+                <p className="text-sm text-green-500">
+                  {apiMessage}
+                </p>
+              )}
+
               {/* Submit */}
-              <ButtonSubmit type="submit">
-                {t.ButtonResetPassword}
+              <ButtonSubmit type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Mengirim..." : t.ButtonResetPassword}
               </ButtonSubmit>
 
               {/* Switch */}

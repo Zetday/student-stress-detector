@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { getProfile } from "../services/userService";
 
@@ -14,40 +14,54 @@ export function UserProvider({ children }) {
 
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      const accessToken = localStorage.getItem("accessToken");
+  const refreshUser = useCallback(async () => {
+    const accessToken = localStorage.getItem("accessToken");
 
-      if (!accessToken) {
-        setLoading(false);
-        return;
-      }
+    if (!accessToken) {
+      setUser({
+        fullname: "",
+        email: "",
+        role: "",
+        profileImage: null,
+      });
+      setLoading(false);
+      return null;
+    }
 
-      const result = await getProfile();
+    setLoading(true);
+    const result = await getProfile();
 
-      if (!result.error) {
-        setUser({
-          fullname: result.data.fullname || "",
-          email: result.data.email || "",
-          role: result.data.role || "",
-          profileImage:
-            result.data.profileImage ||
-            result.data.profile_image ||
-            null,
-        });
-      }
+    if (!result.error) {
+      const nextUser = {
+        fullname: result.data.fullname || "",
+        email: result.data.email || "",
+        role: result.data.role || "",
+        profileImage:
+          result.data.profileImage ||
+          result.data.profile_image ||
+          null,
+      };
 
       setLoading(false);
-    };
+      setUser(nextUser);
+      return nextUser;
+    }
 
-    loadUser();
+    setLoading(false);
+    return null;
   }, []);
+
+  useEffect(() => {
+    refreshUser();
+     void Promise.resolve().then(refreshUser);
+  }, [refreshUser]);
 
   return (
     <UserContext.Provider
       value={{
         user,
         setUser,
+        refreshUser,
         loading,
       }}
     >
@@ -60,6 +74,7 @@ UserProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export function useUser() {
-  return useContext(UserContext);
+  // eslint-disable-next-line react-refresh/only-export-components
+  export function useUser() {
+    return useContext(UserContext);
 }

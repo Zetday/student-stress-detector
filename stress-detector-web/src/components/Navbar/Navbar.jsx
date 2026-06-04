@@ -93,17 +93,13 @@ function Navbar({ title, isOpen, setIsOpen}) {
       <div className="flex items-center gap-3">
         <div className="sm:block">
           <NameDisplay 
-            name={user.fullname}
-            role={user.role}
+            name={user.fullname || "User"}
+            role={user.role || "User"}
           />
         </div>
 
         <FotoProfile
-          src={
-              user.profileImage
-                ? `http://localhost:3000/uploads/images/${user.profileImage}`
-                : null
-            }
+          src={profileSrc}
           name={user.fullname}
           
         />

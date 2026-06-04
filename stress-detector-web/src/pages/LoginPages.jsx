@@ -1,9 +1,10 @@
 // Sistem
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import { useLanguage } from "../contexts/LanguageContext";
-import { login } from "../services/authService";
+import { login, loginWithGoogle} from "../services/authService";
+import { useUser } from "../contexts/UserContext";
 
 // Asset
 import logo from "../assets/img/logo.png";
@@ -26,6 +27,7 @@ function LoginPage() {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const { t } = useLanguage();
+  const { refreshUser } = useUser();
   const navigate = useNavigate();
 
   function handleEmailChange(e) {
@@ -65,8 +67,71 @@ function LoginPage() {
 
     localStorage.setItem("accessToken", data.accessToken);
     localStorage.setItem("refreshToken", data.refreshToken);
+    await refreshUser();
     setShowSuccessPopup(true);
   }
+  
+  const handleGoogleResponse = useCallback(async (response) => {
+    try {
+      if (!response?.credential) {
+        setGoogleError("Gagal menerima kredensial Google.");
+        return;
+      }
+
+      setGoogleError("");
+
+      const { error, data, message } = await loginWithGoogle(
+        response.credential
+      );
+
+      if (error) {
+        setGoogleError(message || "Login Google gagal.");
+        return;
+      }
+
+      localStorage.setItem("accessToken", data.accessToken);
+
+      if (data.refreshToken) {
+        localStorage.setItem("refreshToken", data.refreshToken);
+      }
+
+      await refreshUser();
+
+      setShowSuccessPopup(true);
+    } catch (error) {
+      console.error(error);
+      setGoogleError("Login Google gagal.");
+    }
+  }, [refreshUser]);
+
+useEffect(() => {
+  const intervalId = setInterval(() => {
+    if (!window.google) return;
+
+    window.google.accounts.id.initialize({
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      callback: handleGoogleResponse,
+    });
+
+    if (googleButtonRef.current) {
+      googleButtonRef.current.innerHTML = "";
+
+      window.google.accounts.id.renderButton(
+        googleButtonRef.current,
+        {
+          theme: "outline",
+          size: "large",
+          width: "100%",
+          text: "continue_with",
+        }
+      );
+    }
+
+    clearInterval(intervalId);
+  }, 500);
+
+  return () => clearInterval(intervalId);
+}, [handleGoogleResponse]);
 
   return (
     <section

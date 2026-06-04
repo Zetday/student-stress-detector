@@ -1,8 +1,9 @@
 // Sistem
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import useInput from "../../hooks/useInput";
 import { useLanguage } from "../contexts/LanguageContext";
+import { resetPassword } from "../services/authService";
 
 // Asset
 import logo from "../assets/img/logo.png";
@@ -19,10 +20,14 @@ function NewPassword() {
   const [confirmPassword, onConfirmPasswordChange] = useInput("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [apiError, setApiError] = useState("");
+  const [apiMessage, setApiMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const targetEmail = "user@example.com";
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token") || "";
 
   function validatePassword(value) {
     if (value.length < 8) {
@@ -44,15 +49,28 @@ function NewPassword() {
     onPasswordChange(e);
     setPasswordError("");
     setConfirmPasswordError("");
+    setApiError("");
+    setApiMessage("");
   }
 
   function handleConfirmPasswordChange(e) {
     onConfirmPasswordChange(e);
     setConfirmPasswordError("");
+    setApiError("");
+    setApiMessage("");
   }
 
-  function onSubmitHandler(e) {
+  async function onSubmitHandler(e) {
     e.preventDefault();
+    setApiError("");
+    setApiMessage("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+
+    if (!token) {
+      setApiError("Tautan pemulihan tidak valid. Silakan minta tautan baru.");
+      return;
+    }
 
     const validationMessage = validatePassword(password);
 
@@ -66,7 +84,17 @@ function NewPassword() {
       return;
     }
 
-    navigate("/login");
+    setIsSubmitting(true);
+    const { error, message } = await resetPassword({ token, password });
+    setIsSubmitting(false);
+
+    if (error) {
+      setApiError(message || "Gagal memperbarui kata sandi.");
+      return;
+    }
+
+    setApiMessage(message || "Kata sandi berhasil diubah.");
+    setTimeout(() => navigate("/login"), 1200);
   }
 
   return (
@@ -112,17 +140,19 @@ function NewPassword() {
               {t.DeskripsiNewPassword}
             </p>
 
-            <div className="flex items-center gap-4 mb-14">
-              <span className="text-2xl font-semibold text-blue-500">@</span>
-              <div>
-                <p className="theme-subtle text-xs font-bold uppercase tracking-[0.18em]">
-                  Target Email
+            {!token && (
+              <div className="mb-10 rounded-xl border border-red-500/40 bg-red-500/10 p-4">
+                <p className="text-sm text-red-500">
+                  Tautan pemulihan tidak valid atau token tidak ditemukan.
                 </p>
-                <p className="theme-text mt-1 text-lg">
-                  {targetEmail}
-                </p>
+                <Link
+                  to="/resetpassword"
+                  className="mt-2 inline-block text-sm font-medium text-[#9BB3FF] hover:text-[var(--text)]"
+                >
+                  Minta tautan pemulihan baru
+                </Link>
               </div>
-            </div>
+            )}
 
             <form onSubmit={onSubmitHandler} className="space-y-8">
                 <InputPassword
@@ -143,8 +173,20 @@ function NewPassword() {
                   {t.LabelConfirmNewPassword}
                 </InputPassword>
 
-              <ButtonSubmit type="submit">
-                {t.ButtonNewPassword}
+              {apiError && (
+                <p className="text-sm text-red-500">
+                  {apiError}
+                </p>
+              )}
+
+              {apiMessage && (
+                <p className="text-sm text-green-500">
+                  {apiMessage}
+                </p>
+              )}
+
+              <ButtonSubmit type="submit" disabled={isSubmitting || !token}>
+                {isSubmitting ? "Memperbarui..." : t.ButtonNewPassword}
               </ButtonSubmit>
 
             </form>
