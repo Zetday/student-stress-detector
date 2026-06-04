@@ -1,16 +1,25 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Layout from "../../layouts/Layout";
 import ActivityAnalysisPanel from "../components/ActivityInput/ActivityAnalysisPanel";
 import ActivityFormPanel from "../components/ActivityInput/ActivityFormPanel";
+import { getPastActivityDateOptions } from "../components/ActivityInput/activityFormConstants";
 import useActivityForm from "../components/ActivityInput/useActivityForm";
 import { useLanguage } from "../contexts/LanguageContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import { getActivityHistory } from "../services/activityService";
 
 function formatJournalDate(dateValue, locale) {
   if (!dateValue) {
     return "";
   }
-  return new Date(dateValue).toLocaleDateString(locale || "id-ID", {
+
+  const [year, month, day] = String(dateValue).split("-").map(Number);
+  const date = year && month && day
+    ? new Date(year, month - 1, day)
+    : new Date(dateValue);
+
+  return date.toLocaleDateString(locale || "id-ID", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -18,13 +27,44 @@ function formatJournalDate(dateValue, locale) {
   });
 }
 
+function formatDateOption(date, locale) {
+  return date.toLocaleDateString(locale || "id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function getHistoryDateKey(item) {
+  const dateValue = item.activity?.activity_date || item.predictionDate;
+
+  return dateValue ? String(dateValue).slice(0, 10) : "";
+}
+
 function LogActivitiesPage() {
   const { t } = useLanguage();
   const { user } = useUser();
   const { id } = useParams();
+  const navigate = useNavigate();
   const activityId = id || null;
+  const [usedDateKeys, setUsedDateKeys] = useState(new Set());
+  const [showNoDatePopup, setShowNoDatePopup] = useState(false);
+  const handleSubmitted = useCallback((activityDate) => {
+    if (!activityDate) {
+      return;
+    }
+
+    setUsedDateKeys((currentDates) => {
+      const nextDates = new Set(currentDates);
+      nextDates.add(String(activityDate).slice(0, 10));
+      return nextDates;
+    });
+  }, []);
   const {
     analysisPrediction,
+    handleCancelSubmit,
+    handleConfirmSubmit,
     error,
     form,
     handleChange,
@@ -35,8 +75,66 @@ function LogActivitiesPage() {
     isSubmitting,
     message,
     showAnalysis,
-  } = useActivityForm(t, null, activityId);
+    showSubmitConfirmation,
+  } = useActivityForm(t, null, activityId, { onSubmitted: handleSubmitted });
   const journalDate = formatJournalDate(form.activityDate, t.DashboardDateLocale);
+  const allActivityDateOptions = useMemo(() => getPastActivityDateOptions(), []);
+  const activityDateOptions = useMemo(
+    () => allActivityDateOptions.filter((option) => {
+      if (activityId && option.value === form.activityDate) {
+        return true;
+      }
+
+      return !usedDateKeys.has(option.value);
+    }),
+    [activityId, allActivityDateOptions, form.activityDate, usedDateKeys],
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchUsedDates = async () => {
+      const response = await getActivityHistory();
+
+      if (!isMounted || response.error) {
+        return;
+      }
+
+      const dateKeys = new Set(
+        (response.data || [])
+          .map(getHistoryDateKey)
+          .filter(Boolean),
+      );
+
+      setUsedDateKeys(dateKeys);
+    };
+
+    fetchUsedDates();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (activityId || usedDateKeys.size === 0) {
+      return;
+    }
+
+    if (activityDateOptions.length === 0 && !showAnalysis) {
+      setShowNoDatePopup(true);
+      return;
+    }
+
+    if (!activityDateOptions.some((option) => option.value === form.activityDate)) {
+      handleChange({
+        target: {
+          name: "activityDate",
+          value: activityDateOptions[0].value,
+        },
+      });
+    }
+  }, [activityDateOptions, activityId, form.activityDate, handleChange, showAnalysis, usedDateKeys.size]);
 
   return (
     <Layout title="Catat Data Aktivitas" name={user.fullname} role={user.role}>
@@ -55,6 +153,7 @@ function LogActivitiesPage() {
         </section>
 
       <div className="theme-card rounded-2xl border p-6">
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex items-start gap-4">
           
           {/* Icon */}
@@ -89,6 +188,26 @@ function LogActivitiesPage() {
             </p>
           </div>
         </div>
+
+        <label className="grid gap-2 md:min-w-[280px]">
+          <span className="theme-muted text-[11px] font-bold uppercase tracking-widest">
+            Pilih Tanggal Aktivitas
+          </span>
+          <select
+            name="activityDate"
+            value={form.activityDate}
+            onChange={handleChange}
+            disabled={activityDateOptions.length === 0}
+            className="theme-input h-12 rounded-xl border px-4 text-sm font-semibold outline-none transition focus:border-blue-300"
+          >
+            {activityDateOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {formatDateOption(option.date, t.DashboardDateLocale)}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       </div>
 
         <form
@@ -113,6 +232,58 @@ function LogActivitiesPage() {
           visible={showAnalysis}
           onClose={handleCloseAnalysis}
         />
+
+        {showSubmitConfirmation && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+            <div className="theme-card w-full max-w-md rounded-2xl border p-6 text-center shadow-2xl">
+              <h3 className="theme-text text-2xl font-bold">
+                Kirim data aktivitas?
+              </h3>
+              <p className="theme-muted mt-3 text-sm leading-relaxed">
+                Apakah yakin ingin mengirim data aktivitas untuk tanggal{" "}
+                <span className="theme-text font-semibold">{journalDate}</span>?
+              </p>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={handleCancelSubmit}
+                  className="theme-card-muted h-12 flex-1 rounded-xl border px-4 text-sm font-semibold transition theme-hover"
+                >
+                  Periksa lagi
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmSubmit}
+                  className="h-12 flex-1 rounded-xl bg-blue-400 px-4 text-sm font-bold text-slate-950 transition hover:bg-blue-300"
+                >
+                  Ya, kirim
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showNoDatePopup && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+            <div className="theme-card w-full max-w-md rounded-2xl border p-6 text-center shadow-2xl">
+              <h3 className="theme-text text-2xl font-bold">
+                Semua tanggal sudah terisi
+              </h3>
+              <p className="theme-muted mt-3 text-sm leading-relaxed">
+                Empat tanggal aktivitas sebelum hari ini sudah memiliki catatan. Kamu akan diarahkan ke dashboard.
+              </p>
+
+              <button
+                type="button"
+                onClick={() => navigate("/dashboard")}
+                className="mt-6 h-12 w-full rounded-xl bg-blue-400 px-4 text-sm font-bold text-slate-950 transition hover:bg-blue-300"
+              >
+                Ke Dashboard
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );

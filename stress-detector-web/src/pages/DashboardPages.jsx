@@ -11,8 +11,22 @@ import TodayDiagnose from "../components/DiagnosticBox/TodayDiagnose";
 import api from "../services/api"; // Import service API
 import { getActivityHistory } from "../services/activityService";
 
+const parseDateOnly = (dateValue) => {
+  if (!dateValue) {
+    return null;
+  }
+
+  const [year, month, day] = String(dateValue).slice(0, 10).split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  return new Date(year, month - 1, day);
+};
+
 const getLocalDateKey = (date) => {
-  const parsedDate = date instanceof Date ? date : new Date(date);
+  const parsedDate = date instanceof Date ? date : parseDateOnly(date) || new Date(date);
 
   if (Number.isNaN(parsedDate.getTime())) {
     return "";
@@ -78,7 +92,7 @@ function DashboardPage() {
   const currentDate = new Date();
   const formatActivityDate = (dateString) => {
     if (!dateString) return "";
-    const date = new Date(dateString);
+    const date = parseDateOnly(dateString) || new Date(dateString);
     return date.toLocaleDateString(t.DashboardDateLocale, {
       weekday: "long",
       day: "numeric",
@@ -129,7 +143,7 @@ function DashboardPage() {
           .reverse()
           .map((item) => {
             const itemDate = item.prediction?.prediction_date || item.datetime;
-            const date = new Date(itemDate);
+            const date = parseDateOnly(itemDate) || new Date(itemDate);
 
             return {
               label: date.toLocaleDateString(t.DashboardDateLocale, {

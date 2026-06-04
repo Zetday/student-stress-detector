@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createActivity, updateActivity, getActivityById, getActivityHistory } from "../../services/activityService";
 import { createInitialActivityForm } from "./activityFormConstants";
-import buildActivityPayload from "./buildActivityPayload";
+import buildActivityPayload, { activityHasInput } from "./buildActivityPayload";
 
 const DRAFT_KEY = "activityDraft";
 const AI_POLL_DELAY_MS = 900;
@@ -39,7 +39,7 @@ async function waitForPrediction(activityId) {
   return null;
 }
 
-function useActivityForm(t, initialData = null, activityId = null) {
+function useActivityForm(t, initialData = null, activityId = null, options = {}) {
   const [form, setForm] = useState(() => {
     const initialActivityForm = createInitialActivityForm();
 
@@ -67,6 +67,7 @@ function useActivityForm(t, initialData = null, activityId = null) {
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [analysisPrediction, setAnalysisPrediction] = useState(null);
   const [isAnalysisLoading, setIsAnalysisLoading] = useState(false);
+  const [showSubmitConfirmation, setShowSubmitConfirmation] = useState(false);
 
   useEffect(() => {
     if (activityId && !initialData) {
@@ -105,11 +106,24 @@ function useActivityForm(t, initialData = null, activityId = null) {
     setShowAnalysis(false);
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
+    setError("");
+    setMessage("");
+
+    if (!activityHasInput(form)) {
+      setError("Isi minimal satu data aktivitas sebelum simpan dan prediksi.");
+      return;
+    }
+
+    setShowSubmitConfirmation(true);
+  }
+
+  async function handleConfirmSubmit() {
     setIsSubmitting(true);
     setError("");
     setMessage("");
+    setShowSubmitConfirmation(false);
 
     try {
       const payload = buildActivityPayload(form, "submitted");
@@ -134,6 +148,7 @@ function useActivityForm(t, initialData = null, activityId = null) {
 
       setAnalysisPrediction(prediction);
       setMessage(result.message || t.ActivitySuccessMessage);
+      options.onSubmitted?.(payload.activityDate);
       setForm(createInitialActivityForm());
     } catch (error) {
       setError(error.message || t.ActivitySubmitErrorMessage || "Terjadi kesalahan saat mengirim data.");
@@ -167,11 +182,17 @@ function useActivityForm(t, initialData = null, activityId = null) {
     setShowAnalysis(false);
   }
 
+  function handleCancelSubmit() {
+    setShowSubmitConfirmation(false);
+  }
+
   return {
     error,
     form,
     handleChange,
     handleSubmit,
+    handleConfirmSubmit,
+    handleCancelSubmit,
     handleSaveDraft,
     handleCloseAnalysis,
     isSubmitting,
@@ -179,6 +200,7 @@ function useActivityForm(t, initialData = null, activityId = null) {
     message,
     analysisPrediction,
     showAnalysis,
+    showSubmitConfirmation,
   };
 }
 

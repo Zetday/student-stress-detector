@@ -13,6 +13,17 @@ const getYesterdayDateString = (date = new Date()) => {
   return getLocalDateString(yesterday);
 };
 
+const getPastActivityDateOptions = (date = new Date(), dayCount = 4) =>
+  Array.from({ length: dayCount }, (_, index) => {
+    const optionDate = new Date(date);
+    optionDate.setDate(optionDate.getDate() - (index + 1));
+
+    return {
+      value: getLocalDateString(optionDate),
+      date: optionDate,
+    };
+  });
+
 const createInitialActivityForm = () => ({
   activityDate: getYesterdayDateString(),
   sleepHours: "",
@@ -45,6 +56,7 @@ export {
   activityNumberFields,
   createInitialActivityForm,
   getLocalDateString,
+  getPastActivityDateOptions,
   getYesterdayDateString,
   initialActivityForm,
 };

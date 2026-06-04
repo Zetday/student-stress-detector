@@ -69,6 +69,20 @@ function normalizeScore(score) {
   return Math.round(value <= 1 ? value * 100 : value);
 }
 
+function parseDateOnly(dateValue) {
+  if (!dateValue) {
+    return new Date("");
+  }
+
+  const [year, month, day] = String(dateValue).slice(0, 10).split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return new Date(dateValue);
+  }
+
+  return new Date(year, month - 1, day);
+}
+
 function getScoreLabel(level, score) {
   const normalizedLevel = String(level || "").toLowerCase();
 
@@ -117,12 +131,13 @@ export const getActivityHistory = async () => {
     const completedHistory = predictions.map((prediction) => {
       const activity = activitiesById.get(String(prediction.activity_id));
       const stressScore = normalizeScore(prediction.stress_score);
-      const datetime = new Date(prediction.created_at || prediction.prediction_date);
+      const activityDate = activity?.activity_date || prediction.prediction_date;
+      const datetime = parseDateOnly(activityDate);
 
       return {
         id: prediction.activity_id || prediction.id,
         datetime,
-        predictionDate: prediction.prediction_date,
+        predictionDate: activityDate,
         stressScore,
         stress_score: stressScore,
         scoreLabel: getScoreLabel(prediction.stress_level, stressScore),
@@ -140,8 +155,8 @@ export const getActivityHistory = async () => {
       })
       .map((activity) => ({
         id: activity.id,
-        datetime: new Date(activity.created_at || activity.activity_date),
-        predictionDate: null,
+        datetime: parseDateOnly(activity.activity_date || activity.created_at),
+        predictionDate: activity.activity_date,
         stressScore: 0,
         stress_score: 0,
         scoreLabel: "Belum selesai",

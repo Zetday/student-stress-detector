@@ -30,13 +30,13 @@ function parsePredictionDate(dateValue) {
     return null;
   }
 
-  const date = new Date(dateValue);
+  const [year, month, day] = String(dateValue).slice(0, 10).split("-").map(Number);
 
-  if (Number.isNaN(date.getTime())) {
+  if (!year || !month || !day) {
     return null;
   }
 
-  return date;
+  return new Date(year, month - 1, day);
 }
 
 function getDisplayDate(item) {
