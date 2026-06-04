@@ -133,3 +133,67 @@ export const resetPassword = async (req, res, next) => {
 
   return response(res, 200, 'Kata sandi berhasil diubah, silakan masuk kembali');
 };
+
+export const loginWithGoogle = async (req, res, next) => {
+  const { credential } = req.validated;
+
+  // Verify Google ID token via Google's tokeninfo endpoint (no extra library needed)
+  let googlePayload;
+  try {
+    const verifyRes = await fetch(
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`,
+    );
+    if (!verifyRes.ok) {
+      return next(new AuthenticationError('Token Google tidak valid'));
+    }
+    googlePayload = await verifyRes.json();
+  } catch {
+    return next(new AuthenticationError('Gagal memverifikasi token Google'));
+  }
+
+  // Validate that the token was issued for our app
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  if (clientId && googlePayload.aud !== clientId) {
+    return next(new AuthenticationError('Token Google tidak valid untuk aplikasi ini'));
+  }
+
+  const { sub: googleId, email, name: fullname, picture } = googlePayload;
+
+  if (!googleId || !email) {
+    return next(new AuthenticationError('Data akun Google tidak lengkap'));
+  }
+
+  // Find or create user
+  const userId = await UserRepositories.findOrCreateGoogleUser({
+    googleId,
+    email,
+    fullname: fullname || email.split('@')[0],
+    picture: picture || null,
+  });
+
+  // Generate tokens
+  const accessToken = TokenManager.generateAccessToken({ id: userId });
+  const refreshToken = TokenManager.generateRefreshToken({ id: userId });
+
+  const id = `auth-${nanoid(16)}`;
+  const deviceInfo = req.headers['user-agent'] || 'Unknown Device';
+  const createdAt = new Date().toISOString();
+  const expiresAtDate = new Date();
+  expiresAtDate.setDate(expiresAtDate.getDate() + 7);
+  const expiresAt = expiresAtDate.toISOString();
+
+  await AuthenticationRepositories.addRefreshToken(
+    id,
+    userId,
+    refreshToken,
+    deviceInfo,
+    expiresAt,
+    createdAt,
+  );
+
+  return response(res, 200, 'Login dengan Google berhasil', {
+    accessToken,
+    refreshToken,
+  });
+};
+
