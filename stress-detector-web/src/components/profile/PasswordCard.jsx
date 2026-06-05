@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-function PasswordCard({ onSubmit, error, success }) {
+function PasswordCard({ onSubmit, error, success, t }) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,21 +32,21 @@ function PasswordCard({ onSubmit, error, success }) {
   return (
     <div className="theme-card border rounded-2xl p-6">
       <h3 className="theme-text text-xl font-semibold mb-6">
-        Ubah Password
+        {t.ChangePasswordTitle}
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Current Password */}
         <div>
           <label className="theme-subtle text-xs uppercase mb-2 block">
-            Current Password
+            {t.CurrentPasswordLabel}
           </label>
           <div className="relative">
             <input
               type={showPasswords.current ? "text" : "password"}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Masukkan password saat ini"
+              placeholder={t.CurrentPasswordPlaceholder}
               className="theme-input w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
             />
             <button
@@ -68,14 +68,14 @@ function PasswordCard({ onSubmit, error, success }) {
           {/* New Password */}
           <div>
             <label className="theme-subtle text-xs uppercase mb-2 block">
-              New Password
+              {t.NewPasswordLabel}
             </label>
             <div className="relative">
               <input
                 type={showPasswords.new ? "text" : "password"}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Masukkan password baru"
+                placeholder={t.NewPasswordPlaceholder}
                 className="theme-input w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               />
               <button
@@ -95,14 +95,14 @@ function PasswordCard({ onSubmit, error, success }) {
           {/* Confirm Password */}
           <div>
             <label className="theme-subtle text-xs uppercase mb-2 block">
-              Confirm Password
+              {t.ConfirmPasswordLabel}
             </label>
             <div className="relative">
               <input
                 type={showPasswords.confirm ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Konfirmasi password baru"
+                placeholder={t.ConfirmPasswordPlaceholder}
                 className="theme-input w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
               />
               <button
@@ -126,7 +126,7 @@ function PasswordCard({ onSubmit, error, success }) {
             type="submit"
             className="theme-card-muted px-8 py-2 border rounded-lg transition-all duration-300 text-sm font-medium theme-hover"
           >
-            Reset Password
+            {t.ResetPasswordButton}
           </button>
           {error && (
             <p className="text-sm text-red-500">{error}</p>

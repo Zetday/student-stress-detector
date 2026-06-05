@@ -6,9 +6,107 @@ import ActivityHistoryList from "../components/ActivityHistory/ActivityHistoryLi
 import ActivityHistoryPagination from "../components/ActivityHistory/ActivityHistoryPagination";
 import { getActivityHistory } from "../services/activityService";
 import { useUser } from "../contexts/UserContext";
+import { useLanguage } from "../contexts/LanguageContext";
+
+const LATE_GRACE_DAYS = 5;
+
+function parseDateOnly(dateValue) {
+  if (!dateValue) {
+    return null;
+  }
+
+  const stringValue = String(dateValue);
+
+  if (stringValue.includes("T")) {
+    const date = new Date(stringValue);
+    return Number.isNaN(date.getTime()) ? null : new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  }
+
+  const [year, month, day] = stringValue.slice(0, 10).split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  return new Date(year, month - 1, day);
+}
+
+function getLocalDateKey(date) {
+  if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function addDays(date, amount) {
+  const nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + amount);
+  nextDate.setHours(0, 0, 0, 0);
+  return nextDate;
+}
+
+function getHistoryDateKey(item) {
+  const activityDate =
+    item.predictionDate ||
+    item.activity?.activity_date ||
+    item.prediction?.prediction_date ||
+    item.datetime;
+
+  if (activityDate instanceof Date) {
+    return getLocalDateKey(activityDate);
+  }
+
+  return getLocalDateKey(parseDateOnly(activityDate));
+}
+
+function buildLateHistoryItems(history, accountCreatedAt) {
+  const startDate = parseDateOnly(accountCreatedAt);
+
+  if (!startDate) {
+    return [];
+  }
+
+  const today = new Date();
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const lateCutoffDate = addDays(todayDate, -LATE_GRACE_DAYS);
+  const existingDateKeys = new Set(history.map(getHistoryDateKey).filter(Boolean));
+  const lateItems = [];
+
+  for (
+    let currentDate = new Date(startDate);
+    currentDate < lateCutoffDate;
+    currentDate = addDays(currentDate, 1)
+  ) {
+    const dateKey = getLocalDateKey(currentDate);
+
+    if (!existingDateKeys.has(dateKey)) {
+      lateItems.push({
+        id: `late-${dateKey}`,
+        datetime: new Date(currentDate),
+        activityDateTime: new Date(currentDate),
+        predictionDate: dateKey,
+        stressScore: 0,
+        stress_score: 0,
+        scoreLabel: "-",
+        status: "Terlambat",
+        activity: null,
+        prediction: null,
+        isVirtualLate: true,
+      });
+    }
+  }
+
+  return lateItems;
+}
 
 function ActivityHistoryPage() {
   const { user } = useUser();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialStatusFilter = searchParams.get("status") || "all";
   const [activityHistoryData, setActivityHistoryData] = useState([]);
@@ -61,7 +159,12 @@ function ActivityHistoryPage() {
       startDate.setDate(now.getDate() - 90);
     }
 
-    return activityHistoryData
+    const historyWithLateItems = [
+      ...activityHistoryData,
+      ...buildLateHistoryItems(activityHistoryData, user.createdAt),
+    ];
+
+    return historyWithLateItems
       .filter((item) => {
         const matchesStatus =
           statusFilter === "all" || item.status.toLowerCase() === statusFilter;
@@ -98,7 +201,7 @@ function ActivityHistoryPage() {
         }
         return 0;
       });
-  }, [activityHistoryData, statusFilter, dateFilter, sortOption]);
+  }, [activityHistoryData, statusFilter, dateFilter, sortOption, user.createdAt]);
 
   const totalPages = Math.max(1, Math.ceil(filteredHistory.length / pageSize));
   const currentPageData = filteredHistory.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -132,10 +235,10 @@ function ActivityHistoryPage() {
   };
 
   return (
-    <Layout title="Riwayat Aktivitas" name={user.fullname} role={user.role}>
+    <Layout title={t.ActivityHistoryTitle} name={user.fullname} role={user.role}>
       <div className="space-y-6 text-sm">
         <p className="theme-muted max-w-2xl text-sm">
-          Pantau riwayat jurnal harian yang telah Anda isi sebelumnya.
+          {t.ActivityHistoryDescription}
         </p>
 
         <div className="space-y-6 rounded-3xl p6">
@@ -146,17 +249,18 @@ function ActivityHistoryPage() {
             setDateFilter={handleDateFilter}
             sortOption={sortOption}
             setSortOption={handleSortOption}
+            t={t}
           />
 
           {loading ? (
-            <div className="py-12 text-center text-gray-500 theme-muted">Memuat riwayat aktivitas...</div>
+            <div className="py-12 text-center text-gray-500 theme-muted">{t.ActivityHistoryLoading}</div>
           ) : error ? (
             <div className="py-12 text-center text-red-500">{error}</div>
           ) : filteredHistory.length === 0 ? (
-            <div className="py-12 text-center text-gray-500 theme-muted">Belum ada riwayat aktivitas yang sesuai.</div>
+            <div className="py-12 text-center text-gray-500 theme-muted">{t.ActivityHistoryEmptyFiltered}</div>
           ) : (
             <>
-              <ActivityHistoryList items={currentPageData} /> 
+              <ActivityHistoryList items={currentPageData} t={t} /> 
 
               <ActivityHistoryPagination
                 currentPage={currentPage}
@@ -165,6 +269,7 @@ function ActivityHistoryPage() {
                 to={to}
                 total={filteredHistory.length}
                 onPageChange={setCurrentPage}
+                t={t}
               />
             </>
           )}

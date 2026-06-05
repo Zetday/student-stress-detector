@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 
-function ActivityHistoryPagination({ currentPage, totalPages, from, to, total, onPageChange }) {
+function ActivityHistoryPagination({ currentPage, totalPages, from, to, total, onPageChange, t }) {
   return (
     <div className="theme-muted flex flex-col gap-3 text-sm md:flex-row md:items-center md:justify-between">
       <p>
-        Menampilkan <span className="theme-text">{from}</span> - <span className="theme-text">{to}</span> dari <span className="theme-text">{total}</span> aktivitas
+        {t.ActivityHistoryShowing} <span className="theme-text">{from}</span> - <span className="theme-text">{to}</span> {t.ActivityHistoryOf} <span className="theme-text">{total}</span> {t.ActivityHistoryActivity}
       </p>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -14,7 +14,7 @@ function ActivityHistoryPagination({ currentPage, totalPages, from, to, total, o
           className="theme-card-muted rounded-full border px-3 py-2 text-sm font-semibold transition hover:border-blue-400"
           disabled={currentPage === 1}
         >
-          Prev
+          {t.ActivityHistoryPrevious}
         </button>
 
         {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
@@ -38,7 +38,7 @@ function ActivityHistoryPagination({ currentPage, totalPages, from, to, total, o
           className="theme-card-muted rounded-full border px-3 py-2 text-sm font-semibold transition hover:border-blue-400"
           disabled={currentPage === totalPages}
         >
-          Next
+          {t.ActivityHistoryNext}
         </button>
       </div>
     </div>
@@ -52,6 +52,7 @@ ActivityHistoryPagination.propTypes = {
   to: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
+  t: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default ActivityHistoryPagination;

@@ -19,7 +19,7 @@ const fallbackData = [
   { day: "MIN", value: 62 },
 ];
 
-function WeeklyActivityChart({ data = fallbackData }) {
+function WeeklyActivityChart({ data = fallbackData, title = "Metrik Aktivitas Mingguan" }) {
   const { theme } = useTheme();
   const rootStyle = typeof window !== "undefined"
     ? getComputedStyle(document.documentElement)
@@ -34,7 +34,7 @@ function WeeklyActivityChart({ data = fallbackData }) {
   return (
     <div className="theme-card border rounded-2xl p-6">
       <h3 className="theme-text font-semibold text-xl mb-5">
-        Metrik Aktivitas Mingguan
+        {title}
       </h3>
 
       <div className="h-[250px]">
@@ -78,6 +78,7 @@ WeeklyActivityChart.propTypes = {
     value: PropTypes.number,
     hasData: PropTypes.bool,
   })),
+  title: PropTypes.string,
 };
 
 export default WeeklyActivityChart;

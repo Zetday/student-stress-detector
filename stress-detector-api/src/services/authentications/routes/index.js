@@ -6,6 +6,7 @@ import {
   logout,
   forgotPassword,
   resetPassword,
+  loginWithGoogle,
 } from '../controller/authentication-controller.js';
 import { validate } from '../../../middlewares/validate.js';
 import {
@@ -15,6 +16,7 @@ import {
   deleteAuthenticationPayloadSchema,
   forgotPasswordPayloadSchema,
   resetPasswordPayloadSchema,
+  googleLoginPayloadSchema,
 } from '../validator/schema.js';
 
 const router = Router();
@@ -48,6 +50,11 @@ router.post(
   '/reset-password',
   validate(resetPasswordPayloadSchema),
   resetPassword
+);
+router.post(
+  '/google',
+  validate(googleLoginPayloadSchema),
+  loginWithGoogle
 );
 
 export default router;

@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileAvatarCard from "../components/profile/ProfileAvatarCard";
 import ProfileInfoCard from "../components/profile/ProfileInfoCard";
-import AccountStatsSection from "../components/profile/AccountStatsSection";
 import PasswordCard from "../components/profile/PasswordCard";
 import Layout from "../../layouts/Layout";
 import { useUser } from "../contexts/UserContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import api from "../services/api";
 import { logout } from "../services/authService";
+import { getApiUrl } from "../../api.config";
 
 function ProfilePage() {
   const { user, setUser } = useUser();
@@ -22,7 +22,6 @@ function ProfilePage() {
   const [fullnameInput, setFullnameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
   const [updateError, setUpdateError] = useState("");
-  const [updateSuccess, setUpdateSuccess] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
 
@@ -65,8 +64,7 @@ function ProfilePage() {
       return image;
     }
 
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-    return `${baseUrl}/uploads/images/${encodeURIComponent(image)}`;
+    return getApiUrl(`/uploads/images/${encodeURIComponent(image)}`);
   };
 
   const handleSavePhoto = async () => {
@@ -100,7 +98,6 @@ function ProfilePage() {
 
   const handleUpdateInfo = () => {
     setUpdateError("");
-    setUpdateSuccess("");
     setFullnameInput(user.fullname || "");
     setEmailInput(user.email || "");
     setShowUpdatePopup(true);
@@ -109,19 +106,16 @@ function ProfilePage() {
   const handleCloseUpdatePopup = () => {
     setShowUpdatePopup(false);
     setUpdateError("");
-    setUpdateSuccess("");
   };
 
   const handleFullnameChange = (e) => {
     setFullnameInput(e.target.value);
     setUpdateError("");
-    setUpdateSuccess("");
   };
 
   const handleEmailChange = (e) => {
     setEmailInput(e.target.value);
     setUpdateError("");
-    setUpdateSuccess("");
   };
 
   const handleSaveFullname = async () => {
@@ -156,7 +150,6 @@ function ProfilePage() {
         email: response.data.data.email || emailInput.trim(),
       }));
 
-      setUpdateSuccess(t.UpdateSuccessMessage || "Nama dan email berhasil disimpan.");
       setShowUpdatePopup(false);
     } catch (err) {
       const message = err?.response?.data?.message || err.message || "Gagal memperbarui informasi.";
@@ -171,17 +164,17 @@ function ProfilePage() {
     const { currentPassword, newPassword, confirmPassword } = data;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      setPasswordError("Semua kolom password wajib diisi.");
+      setPasswordError(t.PasswordRequiredError);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError("Password baru dan konfirmasi password tidak cocok.");
+      setPasswordError(t.PasswordMismatchError);
       return;
     }
 
     if (newPassword.length < 6) {
-      setPasswordError("Password baru minimal 6 karakter.");
+      setPasswordError(t.PasswordMinLengthError);
       return;
     }
 
@@ -203,7 +196,7 @@ function ProfilePage() {
       setPasswordSuccess("");
       setShowPasswordSuccessPopup(true);
     } catch (err) {
-      const message = err?.response?.data?.message || err.message || "Gagal memperbarui password.";
+      const message = err?.response?.data?.message || err.message || t.PasswordUpdateError;
       setPasswordError(message);
     }
   };
@@ -220,15 +213,8 @@ function ProfilePage() {
     } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      setUser({ fullname: "", email: "", role: "", profileImage: null });
+      setUser({ fullname: "", email: "", role: "", profileImage: null, createdAt: null });
       navigate("/login", { replace: true });
-    }
-  };
-
-  const handleDeactivateAccount = () => {
-    if (confirm("Are you sure you want to deactivate your account? This action cannot be undone.")) {
-      console.log("Account deactivation initiated");
-      alert("Account deactivation initiated (check console for details)");
     }
   };
 
@@ -275,6 +261,7 @@ function ProfilePage() {
               onSubmit={handlePasswordSubmit}
               error={passwordError}
               success={passwordSuccess}
+              t={t}
             />
 
           </div>
@@ -353,10 +340,10 @@ function ProfilePage() {
             >
               <div className="mb-4">
                 <h2 className="text-2xl font-semibold theme-text">
-                  Password Berhasil Diubah
+                  {t.PasswordSuccessTitle}
                 </h2>
                 <p className="mt-2 text-sm theme-muted">
-                  Tekan di mana saja untuk login ulang.
+                  {t.PasswordSuccessDescription}
                 </p>
               </div>
 
@@ -366,7 +353,7 @@ function ProfilePage() {
                   className="inline-flex justify-center rounded-2xl border border-white/10 px-4 py-3 text-sm font-medium theme-text hover:bg-white/5 transition"
                   onClick={handlePasswordSuccessPopupClick}
                 >
-                  Kembali ke Login
+                  {t.BackToLoginButton}
                 </button>
               </div>
             </div>

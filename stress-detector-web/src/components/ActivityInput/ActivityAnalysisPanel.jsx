@@ -66,20 +66,22 @@ function ActivityAnalysisPanel({ isLoading = false, prediction = null, t, visibl
   const stressScore = normalizeStressScore(prediction?.stress_score);
   const stressCategory = getStressCategory(stressScore ?? 0, prediction?.stress_level, t);
   const hasPrediction = stressScore !== null;
+  const predictionSummary =
+    prediction?.summary ||
+    prediction?.insight_text ||
+    prediction?.recommendation_text ||
+    prediction?.description ||
+    "";
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-6"
-      onClick={onClose}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-6">
       <div
         className="relative w-full max-w-lg rounded-[28px] border border-white/10 bg-theme-card p-6 shadow-2xl transition duration-200"
-        onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+          className="theme-card-muted theme-text absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] shadow-sm transition hover:border-blue-400 hover:text-blue-400"
           aria-label={t.CloseButton || "Tutup"}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
@@ -107,10 +109,10 @@ function ActivityAnalysisPanel({ isLoading = false, prediction = null, t, visibl
               <div className="py-8">
                 <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-blue-300/20 border-t-blue-300" />
                 <p className="theme-text mt-5 text-lg font-bold">
-                  Menunggu hasil analisis AI...
+                  {t.ActivityAnalysisLoadingTitle}
                 </p>
                 <p className="theme-muted mx-auto mt-3 max-w-xs text-sm leading-relaxed">
-                  Skor stres akan ditampilkan setelah model AI menyimpan hasil prediksi.
+                  {t.ActivityAnalysisLoadingDescription}
                 </p>
               </div>
             ) : (
@@ -124,9 +126,11 @@ function ActivityAnalysisPanel({ isLoading = false, prediction = null, t, visibl
                 <p className={`mt-2 text-xl font-bold ${stressCategory.color}`}>
                   {stressCategory.label}
                 </p>
-                <p className="theme-muted mx-auto mt-4 max-w-xs text-sm leading-relaxed">
-                  {t.ActivityStressSummary}
-                </p>
+                {predictionSummary && (
+                  <p className="theme-muted mx-auto mt-4 max-w-xs text-sm leading-relaxed">
+                    {predictionSummary}
+                  </p>
+                )}
               </>
             )}
           </div>
@@ -141,6 +145,10 @@ ActivityAnalysisPanel.propTypes = {
   prediction: PropTypes.shape({
     stress_level: PropTypes.string,
     stress_score: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    summary: PropTypes.string,
+    insight_text: PropTypes.string,
+    recommendation_text: PropTypes.string,
+    description: PropTypes.string,
   }),
   t: PropTypes.objectOf(PropTypes.string).isRequired,
   visible: PropTypes.bool,
