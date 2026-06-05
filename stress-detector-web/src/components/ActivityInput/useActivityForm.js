@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createActivity, updateActivity, getActivityById, getActivityHistory } from "../../services/activityService";
-import { createInitialActivityForm } from "./activityFormConstants";
+import { activityNumberFields, createInitialActivityForm } from "./activityFormConstants";
 import buildActivityPayload, { activityHasInput } from "./buildActivityPayload";
 
 const DRAFT_KEY = "activityDraft";
@@ -11,6 +11,24 @@ function wait(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+}
+
+function getWholeNonNegativeValue(value, fallbackValue = "") {
+  if (value === null || value === undefined || value === "") {
+    return fallbackValue;
+  }
+
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue)) {
+    return fallbackValue;
+  }
+
+  return String(Math.max(0, Math.trunc(numericValue)));
+}
+
+function sanitizeIntegerInputValue(value) {
+  return String(value).replace(/\D/g, "");
 }
 
 async function waitForPrediction(activityId) {
@@ -78,16 +96,16 @@ function useActivityForm(t, initialData = null, activityId = null, options = {})
           setForm({
             ...createInitialActivityForm(),
             activityDate: act.activity_date ? String(act.activity_date).slice(0, 10) : "",
-            sleepHours: act.sleep_hours || "",
-            studyHours: act.study_hours || "",
-            screenTimeHours: act.screen_time_hours || "",
-            socialMediaHours: act.social_media_hours || "",
-            physicalActivityMinutes: act.physical_activity_minutes || "",
+            sleepHours: getWholeNonNegativeValue(act.sleep_hours),
+            studyHours: getWholeNonNegativeValue(act.study_hours),
+            screenTimeHours: getWholeNonNegativeValue(act.screen_time_hours),
+            socialMediaHours: getWholeNonNegativeValue(act.social_media_hours),
+            physicalActivityMinutes: getWholeNonNegativeValue(act.physical_activity_minutes),
             dailyNote: act.note || "",
-            moodScore: act.mood_score?.toString() || "0",
-            fatigueLevel: act.fatigue_level?.toString() || "0",
-            assignmentLoad: act.assignment_load?.toString() || "0",
-            deadlinePressure: act.deadline_pressure?.toString() || "0",
+            moodScore: getWholeNonNegativeValue(act.mood_score, "0"),
+            fatigueLevel: getWholeNonNegativeValue(act.fatigue_level, "0"),
+            assignmentLoad: getWholeNonNegativeValue(act.assignment_load, "0"),
+            deadlinePressure: getWholeNonNegativeValue(act.deadline_pressure, "0"),
           });
         }
       };
@@ -97,13 +115,16 @@ function useActivityForm(t, initialData = null, activityId = null, options = {})
 
   function handleChange(event) {
     const { name, value } = event.target;
+    const nextValue = activityNumberFields.includes(name)
+      ? sanitizeIntegerInputValue(value)
+      : value;
+
     setForm((currentForm) => ({
       ...currentForm,
-      [name]: value,
+      [name]: nextValue,
     }));
     setError("");
     setMessage("");
-    setShowAnalysis(false);
   }
 
   function handleSubmit(event) {
@@ -112,12 +133,12 @@ function useActivityForm(t, initialData = null, activityId = null, options = {})
     setMessage("");
 
     if (!form.activityDate) {
-      setError("Pilih tanggal aktivitas terlebih dahulu.");
+      setError(t.ActivityDateRequiredError);
       return;
     }
 
     if (!activityHasInput(form)) {
-      setError("Isi minimal satu data aktivitas sebelum simpan dan prediksi.");
+      setError(t.ActivityMinimumInputError);
       return;
     }
 
@@ -169,7 +190,7 @@ function useActivityForm(t, initialData = null, activityId = null, options = {})
     setError("");
 
     if (!form.activityDate) {
-      setError("Pilih tanggal aktivitas terlebih dahulu.");
+      setError(t.ActivityDateRequiredError);
       return;
     }
 
@@ -183,7 +204,7 @@ function useActivityForm(t, initialData = null, activityId = null, options = {})
     if (result.error) {
       setError(result.message);
     } else {
-      setMessage("Draft berhasil disimpan");
+      setMessage(t.ActivityDraftSavedMessage);
     }
 
     setIsSubmitting(false);

@@ -19,7 +19,7 @@ const COLORS = [
   "#4ade80",
 ];
 
-function StressIntensityChart({ avgScore = 74, data = fallbackChartData }) {
+function StressIntensityChart({ avgScore = 74, data = fallbackChartData, title = "Intensitas Stres" }) {
   const { theme } = useTheme();
   void theme;
   const chartData = data.length > 0 ? data : fallbackChartData;
@@ -40,7 +40,7 @@ function StressIntensityChart({ avgScore = 74, data = fallbackChartData }) {
   return (
     <div className="theme-card border rounded-2xl p-6">
       <h3 className="theme-text font-semibold text-xl mb-4">
-        Intensitas Stres
+        {title}
       </h3>
 
       <div className="h-[250px] flex justify-center items-center">
@@ -91,6 +91,7 @@ StressIntensityChart.propTypes = {
     name: PropTypes.string,
     value: PropTypes.number,
   })),
+  title: PropTypes.string,
 };
 
 export default StressIntensityChart;

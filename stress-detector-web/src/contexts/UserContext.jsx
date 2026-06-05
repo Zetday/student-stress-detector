@@ -10,6 +10,7 @@ export function UserProvider({ children }) {
     email: "",
     role: "",
     profileImage: null,
+    createdAt: null,
   });
 
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ export function UserProvider({ children }) {
         email: "",
         role: "",
         profileImage: null,
+        createdAt: null,
       });
       setLoading(false);
       return null;
@@ -40,6 +42,7 @@ export function UserProvider({ children }) {
           result.data.profileImage ||
           result.data.profile_image ||
           null,
+        createdAt: result.data.createdAt || result.data.created_at || null,
       };
 
       setLoading(false);

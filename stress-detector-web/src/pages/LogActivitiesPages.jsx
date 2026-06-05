@@ -165,7 +165,7 @@ function LogActivitiesPage() {
   }, [activityDateOptions, activityId, form.activityDate, handleChange, showAnalysis, usedDateKeys.size]);
 
   return (
-    <Layout title="Catat Data Aktivitas" name={user.fullname} role={user.role}>
+    <Layout title={t.LogActivityTitle} name={user.fullname} role={user.role}>
       <div className="space-y-6 max-w-7xl mx-auto">
         <section className="theme-card rounded-2xl p-5 md:p-7">
           <div className="grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(360px,0.7fr)]">
@@ -219,7 +219,7 @@ function LogActivitiesPage() {
 
         <label className="grid gap-2 md:min-w-[280px]">
           <span className="theme-muted text-[11px] font-bold uppercase tracking-widest">
-            Pilih Tanggal Aktivitas
+            {t.ActivitySelectDateLabel}
           </span>
           <select
             name="activityDate"
@@ -265,10 +265,10 @@ function LogActivitiesPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
             <div className="theme-card w-full max-w-md rounded-2xl border p-6 text-center shadow-2xl">
               <h3 className="theme-text text-2xl font-bold">
-                Kirim data aktivitas?
+                {t.ActivitySubmitConfirmationTitle}
               </h3>
               <p className="theme-muted mt-3 text-sm leading-relaxed">
-                Apakah yakin ingin mengirim data aktivitas untuk tanggal{" "}
+                {t.ActivitySubmitConfirmationDescription}{" "}
                 <span className="theme-text font-semibold">{journalDate}</span>?
               </p>
 
@@ -278,14 +278,14 @@ function LogActivitiesPage() {
                   onClick={handleCancelSubmit}
                   className="theme-card-muted h-12 flex-1 rounded-xl border px-4 text-sm font-semibold transition theme-hover"
                 >
-                  Periksa lagi
+                  {t.ActivityReviewAgainButton}
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmSubmit}
                   className="h-12 flex-1 rounded-xl bg-blue-400 px-4 text-sm font-bold text-slate-950 transition hover:bg-blue-300"
                 >
-                  Ya, kirim
+                  {t.ActivityConfirmSubmitButton}
                 </button>
               </div>
             </div>
@@ -296,10 +296,10 @@ function LogActivitiesPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
             <div className="theme-card w-full max-w-md rounded-2xl border p-6 text-center shadow-2xl">
               <h3 className="theme-text text-2xl font-bold">
-                Semua tanggal sudah terisi
+                {t.ActivityAllDatesFilledTitle}
               </h3>
               <p className="theme-muted mt-3 text-sm leading-relaxed">
-                Empat tanggal aktivitas sebelum hari ini sudah memiliki catatan. Kamu akan diarahkan ke dashboard.
+                {t.ActivityAllDatesFilledDescription}
               </p>
 
               <button
@@ -307,7 +307,7 @@ function LogActivitiesPage() {
                 onClick={() => navigate("/dashboard")}
                 className="mt-6 h-12 w-full rounded-xl bg-blue-400 px-4 text-sm font-bold text-slate-950 transition hover:bg-blue-300"
               >
-                Ke Dashboard
+                {t.ActivityGoToDashboardButton}
               </button>
             </div>
           </div>

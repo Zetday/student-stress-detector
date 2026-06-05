@@ -10,6 +10,7 @@ import TodayDiagnose from "../components/DiagnosticBox/TodayDiagnose";
 // import staricon from "../assets/icons/star.png" // Tidak digunakan
 import api from "../services/api"; // Import service API
 import { getActivityHistory } from "../services/activityService";
+import { useTheme } from "../contexts/ThemeContext";
 
 const parseDateOnly = (dateValue) => {
   if (!dateValue) {
@@ -94,9 +95,40 @@ const mergeHistoryItem = (item) => {
   };
 };
 
+const buildStressTrendData = (history, endDate, locale) => {
+  const completedItemsByDate = new Map();
+
+  history
+    .filter((item) => item.status !== "Draft")
+    .forEach((item) => {
+      const activityDateKey = getActivityDateKey(item);
+
+      if (activityDateKey && !completedItemsByDate.has(activityDateKey)) {
+        completedItemsByDate.set(activityDateKey, item);
+      }
+    });
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = addDays(endDate, index - 6);
+    const dateKey = getLocalDateKey(date);
+    const item = completedItemsByDate.get(dateKey);
+
+    return {
+      label: date.toLocaleDateString(locale || "id-ID", {
+        day: "numeric",
+        month: "short",
+      }),
+      stress_score: item ? item.stressScore : null,
+      hasStressData: Boolean(item),
+      prediction_date: dateKey,
+    };
+  });
+};
+
 function DashboardPage() {
   const { t } = useLanguage();
   const { user } = useUser();
+  const { theme } = useTheme();
   const { activityId: paramActivityId } = useParams(); // Ambil activityId dari URL jika ada
   const navigate = useNavigate();
 
@@ -139,41 +171,25 @@ function DashboardPage() {
         }
 
         const history = historyResponse.data || [];
-        const startDate = addDays(today, -6);
-        const startDateKey = getLocalDateKey(startDate);
-        const todayDateKey = getLocalDateKey(today);
         const sortedHistory = [...history].sort((a, b) => b.datetime - a.datetime);
-        const sevenDayItems = sortedHistory.filter((item) => {
+        const todayStartDate = addDays(today, -6);
+        const todayStartDateKey = getLocalDateKey(todayStartDate);
+        const todayDateKey = getLocalDateKey(today);
+        const currentSevenDayItems = sortedHistory.filter((item) => {
           const activityDateKey = getActivityDateKey(item);
+
           return (
             activityDateKey &&
-            activityDateKey >= startDateKey &&
+            activityDateKey >= todayStartDateKey &&
             activityDateKey <= todayDateKey
           );
         });
 
-        setDraftActivity(sevenDayItems.find((item) => item.status === "Draft") || null);
-
-        const rolling7Days = sortedHistory
-          .filter((item) => item.status !== "Draft")
-          .slice(0, 7)
-          .reverse()
-          .map((item) => {
-            const itemDate = item.prediction?.prediction_date || item.datetime;
-            const date = parseDateOnly(itemDate) || new Date(itemDate);
-
-            return {
-              label: date.toLocaleDateString(t.DashboardDateLocale, {
-                day: "numeric",
-                month: "short",
-              }),
-              stress_score: item.stressScore,
-              hasStressData: true,
-              prediction_date: getLocalDateKey(itemDate),
-            };
-          });
-
-        setStressTrendData(rolling7Days);
+        setDraftActivity(
+          paramActivityId
+            ? null
+            : currentSevenDayItems.find((item) => item.status === "Draft") || null,
+        );
 
         // 1. Ambil aktivitas spesifik jika paramActivityId ada, jika tidak ambil data selesai terbaru.
         let activityToDisplay = null;
@@ -196,7 +212,15 @@ function DashboardPage() {
           const latestCompletedItem = sortedHistory.find((item) => item.status !== "Draft");
           activityToDisplay = mergeHistoryItem(latestCompletedItem);
         }
+
         setCurrentActivity(activityToDisplay);
+
+        const detailDate =
+          parseDateOnly(activityToDisplay?.activity_date) ||
+          parseDateOnly(activityToDisplay?.prediction_date) ||
+          today;
+
+        setStressTrendData(buildStressTrendData(sortedHistory, detailDate, t.DashboardDateLocale));
 
       } catch (err) {
         console.error("Failed to fetch dashboard data:", err);
@@ -347,18 +371,18 @@ function DashboardPage() {
               <img
                 src={calender}
                 alt="calendar"
-                className="w-8 h-8 dark:invert"
+                className={`w-8 h-8 ${theme === "dark" ? "invert" : ""}`}
               />
             </div>
 
-            {/* Text */}
+              {/* Text */}
             <div>
               <h2 className="theme-text text-sm md:text-lg font-bold">
-                {t.LastJournalSummaryTitle}
+                {paramActivityId ? t.DetailJournalSummaryTitle : t.LastJournalSummaryTitle}
               </h2>
 
               <p className="theme-muted text-sm mt-1">
-                {currentActivityFormattedDate || "Belum ada aktivitas tercatat"}
+                {currentActivityFormattedDate || t.DashboardNoActivityRecorded}
               </p>
             </div>
 
@@ -459,16 +483,16 @@ function DashboardPage() {
     <div className="col-span-1 lg:col-span-4">
       <div className="theme-card-muted rounded-2xl border p-5">
         <div className="mb-4">
-          <p className="theme-text text-lg font-semibold">{t.ActivityDailyNoteTitle || "Catatan Harian"}</p>
+          <p className="theme-text text-lg font-semibold">{t.DashboardDailyNoteTitle}</p>
           <p className="theme-muted mt-2 text-sm leading-relaxed">
-            Riwayat catatan dari jurnal aktivitas terakhir.
+            {t.DashboardDailyNoteDescription}
           </p>
         </div>
 
         <textarea
           readOnly
           value={currentActivity?.note || ""}
-          placeholder="Belum ada catatan aktivitas."
+          placeholder={t.DashboardDailyNotePlaceholder}
           className="theme-input min-h-45 w-full resize-none rounded-2xl border p-4 text-sm outline-none"
         />
 

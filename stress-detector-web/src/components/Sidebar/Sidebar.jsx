@@ -27,7 +27,7 @@ function Sidebar({ isOpen, setIsOpen }) {
 
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    setUser({ fullname: "", email: "", role: "", profileImage: null });
+    setUser({ fullname: "", email: "", role: "", profileImage: null, createdAt: null });
     navigate("/login", { replace: true });
   };
 

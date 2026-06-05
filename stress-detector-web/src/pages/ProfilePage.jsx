@@ -171,17 +171,17 @@ function ProfilePage() {
     const { currentPassword, newPassword, confirmPassword } = data;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      setPasswordError("Semua kolom password wajib diisi.");
+      setPasswordError(t.PasswordRequiredError);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setPasswordError("Password baru dan konfirmasi password tidak cocok.");
+      setPasswordError(t.PasswordMismatchError);
       return;
     }
 
     if (newPassword.length < 6) {
-      setPasswordError("Password baru minimal 6 karakter.");
+      setPasswordError(t.PasswordMinLengthError);
       return;
     }
 
@@ -203,7 +203,7 @@ function ProfilePage() {
       setPasswordSuccess("");
       setShowPasswordSuccessPopup(true);
     } catch (err) {
-      const message = err?.response?.data?.message || err.message || "Gagal memperbarui password.";
+      const message = err?.response?.data?.message || err.message || t.PasswordUpdateError;
       setPasswordError(message);
     }
   };
@@ -220,7 +220,7 @@ function ProfilePage() {
     } finally {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      setUser({ fullname: "", email: "", role: "", profileImage: null });
+      setUser({ fullname: "", email: "", role: "", profileImage: null, createdAt: null });
       navigate("/login", { replace: true });
     }
   };
@@ -275,6 +275,7 @@ function ProfilePage() {
               onSubmit={handlePasswordSubmit}
               error={passwordError}
               success={passwordSuccess}
+              t={t}
             />
 
           </div>
@@ -353,10 +354,10 @@ function ProfilePage() {
             >
               <div className="mb-4">
                 <h2 className="text-2xl font-semibold theme-text">
-                  Password Berhasil Diubah
+                  {t.PasswordSuccessTitle}
                 </h2>
                 <p className="mt-2 text-sm theme-muted">
-                  Tekan di mana saja untuk login ulang.
+                  {t.PasswordSuccessDescription}
                 </p>
               </div>
 
@@ -366,7 +367,7 @@ function ProfilePage() {
                   className="inline-flex justify-center rounded-2xl border border-white/10 px-4 py-3 text-sm font-medium theme-text hover:bg-white/5 transition"
                   onClick={handlePasswordSuccessPopupClick}
                 >
-                  Kembali ke Login
+                  {t.BackToLoginButton}
                 </button>
               </div>
             </div>

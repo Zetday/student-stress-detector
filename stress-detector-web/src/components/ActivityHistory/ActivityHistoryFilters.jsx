@@ -1,26 +1,26 @@
 import PropTypes from "prop-types";
 import calender from "../../assets/icons/calendar.svg"
 
-const statusOptions = [
-  { value: "all", label: "Semua" },
-  { value: "selesai", label: "Selesai" },
-  { value: "draft", label: "Draft" },
-  { value: "terlambat", label: "Terlambat" },
+const getStatusOptions = (t) => [
+  { value: "all", label: t.ActivityHistoryStatusAll },
+  { value: "selesai", label: t.ActivityHistoryStatusCompleted },
+  { value: "draft", label: t.ActivityHistoryStatusDraft },
+  { value: "terlambat", label: t.ActivityHistoryStatusLate },
 ];
 
-const dateOptions = [
-  { value: "all", label: "Semua data" },
-  { value: "7-day", label: "7 hari terakhir" },
-  { value: "this-month", label: "Bulan ini" },
-  { value: "last-month", label: "Bulan lalu" },
-  { value: "3-month", label: "3 Bulan terakhir" },
+const getDateOptions = (t) => [
+  { value: "all", label: t.ActivityHistoryDateAll },
+  { value: "7-day", label: t.ActivityHistoryDateLast7Days },
+  { value: "this-month", label: t.ActivityHistoryDateThisMonth },
+  { value: "last-month", label: t.ActivityHistoryDateLastMonth },
+  { value: "3-month", label: t.ActivityHistoryDateLast3Months },
 ];
 
-const sortOptions = [
-  { value: "newest", label: "Terbaru" },
-  { value: "oldest", label: "Terlama" },
-  { value: "highest-score", label: "Skor tertinggi" },
-  { value: "lowest-score", label: "Skor terendah" },
+const getSortOptions = (t) => [
+  { value: "newest", label: t.ActivityHistorySortNewest },
+  { value: "oldest", label: t.ActivityHistorySortOldest },
+  { value: "highest-score", label: t.ActivityHistorySortHighestScore },
+  { value: "lowest-score", label: t.ActivityHistorySortLowestScore },
 ];
 
 function ActivityHistoryFilters({
@@ -30,7 +30,12 @@ function ActivityHistoryFilters({
   setDateFilter,
   sortOption,
   setSortOption,
+  t,
 }) {
+  const statusOptions = getStatusOptions(t);
+  const dateOptions = getDateOptions(t);
+  const sortOptions = getSortOptions(t);
+
   return (
     <div className="space-y-4 text-sm">
       <div className="theme-card inline-flex w-full max-w-[620px] items-center gap-1 rounded-2xl border p-1">
@@ -87,6 +92,7 @@ ActivityHistoryFilters.propTypes = {
   setDateFilter: PropTypes.func.isRequired,
   sortOption: PropTypes.string.isRequired,
   setSortOption: PropTypes.func.isRequired,
+  t: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default ActivityHistoryFilters;

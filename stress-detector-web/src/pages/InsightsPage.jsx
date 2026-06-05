@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import AcademicCondition from "../components/Insights/AcademicCondition";
 import AINarrativeCard from "../components/Insights/AINarrativeCard";
 import PriorityCard from "../components/Insights/PriorityCard";
@@ -45,9 +45,15 @@ const getTrendPercentage = (items, selector) => {
   return Math.round(((lastAverage - firstAverage) / firstAverage) * 100);
 };
 
+const formatTemplate = (template, values) =>
+  Object.entries(values).reduce(
+    (result, [key, value]) => result.replaceAll(`{${key}}`, value),
+    template,
+  );
+
 const getPriorityLevel = (condition) => (condition ? "URGENT" : "PENTING");
 
-const normalizeRecommendation = (recommendation) => ({
+const normalizeRecommendation = (recommendation, locale) => ({
   id: recommendation.id,
   title: recommendation.title || recommendation.category || "Rekomendasi",
   recommendation_text:
@@ -57,7 +63,7 @@ const normalizeRecommendation = (recommendation) => ({
   priority_level: recommendation.priority_level || "medium",
   category: recommendation.category || "Umum",
   duration: recommendation.created_at
-    ? new Date(recommendation.created_at).toLocaleDateString("id-ID", {
+    ? new Date(recommendation.created_at).toLocaleDateString(locale, {
         day: "numeric",
         month: "short",
         year: "numeric",
@@ -282,7 +288,9 @@ function InsightPage() {
             params: { limit: 10, offset: 0 },
           });
           databaseRecommendations =
-            recommendationsResponse.data.data?.recommendations?.map(normalizeRecommendation) || [];
+            recommendationsResponse.data.data?.recommendations?.map((recommendation) =>
+              normalizeRecommendation(recommendation, t.DashboardDateLocale)
+            ) || [];
         } catch (recommendationError) {
           console.warn("Failed to fetch recommendations:", recommendationError);
         }
@@ -291,37 +299,37 @@ function InsightPage() {
         setNarrativeInsight(latestDatabaseInsight);
         setWeeklyActivityData(chartData);
         setStressIntensityData([
-          { name: "Tinggi", value: Math.round((intensityCounts.high / totalIntensity) * 100) },
-          { name: "Sedang", value: Math.round((intensityCounts.medium / totalIntensity) * 100) },
-          { name: "Rendah", value: Math.round((intensityCounts.low / totalIntensity) * 100) },
+          { name: t.HighText, value: Math.round((intensityCounts.high / totalIntensity) * 100) },
+          { name: t.MediumText, value: Math.round((intensityCounts.medium / totalIntensity) * 100) },
+          { name: t.LowText, value: Math.round((intensityCounts.low / totalIntensity) * 100) },
         ]);
         setAcademicConditionData([
           {
-            label: "WAKTU BELAJAR",
+            label: t.InsightsStudyTimeLabel,
             value: `${weeklySummary.avgStudyHours.toFixed(1)} ${t.HourText}`,
             width: `${Math.min((weeklySummary.avgStudyHours / 8) * 100, 100)}%`,
             color: "bg-blue-300",
           },
           {
-            label: "BEBAN TUGAS",
+            label: t.InsightsTaskLoadLabel,
             value: `${weeklySummary.avgAssignmentLoad.toFixed(0)}%`,
             width: `${Math.min(weeklySummary.avgAssignmentLoad, 100)}%`,
             color: weeklySummary.avgAssignmentLoad >= 70 ? "bg-red-300" : weeklySummary.avgAssignmentLoad >= 40 ? "bg-yellow-300" : "bg-green-400",
           },
           {
-            label: "TEKANAN DEADLINE",
+            label: t.InsightsDeadlinePressureLabel,
             value: `${weeklySummary.avgDeadlinePressure.toFixed(0)}%`,
             width: `${Math.min(weeklySummary.avgDeadlinePressure, 100)}%`,
             color: weeklySummary.avgDeadlinePressure >= 70 ? "bg-red-300" : weeklySummary.avgDeadlinePressure >= 40 ? "bg-yellow-300" : "bg-green-400",
           },
           {
-            label: "AKTIVITAS FISIK",
+            label: t.InsightsPhysicalActivityLabel,
             value: `${weeklySummary.avgPhysicalActivity.toFixed(0)} ${t.MinuteText}`,
             width: `${Math.min((weeklySummary.avgPhysicalActivity / 60) * 100, 100)}%`,
             color: weeklySummary.avgPhysicalActivity >= 30 ? "bg-green-400" : weeklySummary.avgPhysicalActivity >= 15 ? "bg-yellow-300" : "bg-red-300",
           },
           {
-            label: "TIDUR (RATA-RATA)",
+            label: t.InsightsAverageSleepLabel,
             value: `${weeklySummary.avgSleepHours.toFixed(1)} ${t.HourText}`,
             width: `${Math.min((weeklySummary.avgSleepHours / 8) * 100, 100)}%`,
             color: weeklySummary.avgSleepHours >= 7 ? "bg-green-400" : weeklySummary.avgSleepHours >= 5 ? "bg-yellow-300" : "bg-red-300",
@@ -332,7 +340,7 @@ function InsightPage() {
 
       } catch (err) {
         console.error("Failed to fetch insights data:", err);
-        setError(err.response?.data?.message || err.message || "Gagal memuat data insights.");
+        setError(err.response?.data?.message || err.message || t.InsightsFetchError);
       } finally {
         setLoading(false);
       }
@@ -367,11 +375,11 @@ function InsightPage() {
   };
 
   // Helper to determine trend indicator
-  const getTrendIndicator = (trendValue) => {
-    if (trendValue > 0) return 'naik';
-    if (trendValue < 0) return 'turun';
-    return 'stabil';
-  };
+  const getTrendIndicator = useCallback((trendValue) => {
+    if (trendValue > 0) return t.InsightsTrendUp;
+    if (trendValue < 0) return t.InsightsTrendDown;
+    return t.InsightsTrendStable;
+  }, [t]);
 
   // Map dashboardData to metricsData for StatsCard
   const metricsData = useMemo(() => {
@@ -387,7 +395,7 @@ function InsightPage() {
         value: Math.round(latestStressScore),
         maxScore: 100,
         color: getScoreColor(latestStressScore, 'stress'),
-        subtitle: latestActivity ? "Data terakhir" : "Belum ada data",
+        subtitle: latestActivity ? t.InsightsLatestData : t.InsightsNoData,
         trend: weeklySummary.stressTrend,
       },
       {
@@ -415,47 +423,53 @@ function InsightPage() {
         trend: weeklySummary.physicalActivityTrend,
       },
     ];
-  }, [insightData, t]);
+  }, [getTrendIndicator, insightData, t]);
 
   if (loading) {
     return (
-      <Layout title="Insights" name={user.fullname} role={user.role}>
-        <div className="text-center py-10 theme-muted">Memuat data insights...</div>
+      <Layout title={t.InsightsPageTitle} name={user.fullname} role={user.role}>
+        <div className="text-center py-10 theme-muted">{t.InsightsLoading}</div>
       </Layout>
     );
   }
 
   if (error) {
     return (
-      <Layout title="Insights" name={user.fullname} role={user.role}>
+      <Layout title={t.InsightsPageTitle} name={user.fullname} role={user.role}>
         <div className="text-center py-10 text-red-500">Error: {error}</div>
       </Layout>
     );
   }
 
   const fallbackInsightDescription = insightData?.latestActivity
-    ? `Dalam ${insightData.dataCount} catatan selesai terakhir pada rentang 7 hari ini, rata-rata stres berada di ${insightData.weeklySummary.avgStressScore}/100. Rata-rata tidur ${insightData.weeklySummary.avgSleepHours.toFixed(1)} jam, beban tugas ${insightData.weeklySummary.avgAssignmentLoad.toFixed(0)}%, dan aktivitas fisik ${insightData.weeklySummary.avgPhysicalActivity.toFixed(0)} menit. Insight akan diperbarui dari database setelah AI menyimpan data terbaru.`
-    : "Belum ada catatan aktivitas selesai untuk dianalisis. Isi jurnal harian terlebih dahulu agar insight dan rekomendasi bisa diperbarui dari database.";
+    ? formatTemplate(t.InsightsFallbackWithData, {
+        count: insightData.dataCount,
+        stressScore: insightData.weeklySummary.avgStressScore,
+        sleepHours: insightData.weeklySummary.avgSleepHours.toFixed(1),
+        taskLoad: insightData.weeklySummary.avgAssignmentLoad.toFixed(0),
+        physicalActivity: insightData.weeklySummary.avgPhysicalActivity.toFixed(0),
+      })
+    : t.InsightsFallbackNoData;
   const latestInsightDescription =
     narrativeInsight?.insight_text || fallbackInsightDescription;
   const narrativeSubtitle = narrativeInsight?.created_at
-    ? `Insight terbaru dari database - ${new Date(narrativeInsight.created_at).toLocaleDateString("id-ID", {
+    ? `${t.InsightsLatestFromDatabase} - ${new Date(narrativeInsight.created_at).toLocaleDateString(t.DashboardDateLocale, {
         day: "numeric",
         month: "long",
         year: "numeric",
       })}`
-    : t.AINarrativeInsightSubtitle || "Berikut insight untuk minggu ini";
+    : t.AINarrativeInsightSubtitle;
 
   return (
-    <Layout title="Insights" name={user.fullname} role={user.role}>
+    <Layout title={t.InsightsPageTitle} name={user.fullname} role={user.role}>
       <div className="space-y-6">
         {/* Header Section */}
         <div>
           <p className="theme-subtle text-xs uppercase mb-2">
-            Insights & Academic Analytics
+            {t.InsightsEyebrow}
           </p>
           <h1 className="theme-text text-3xl md:text-4xl font-bold">
-            Insights Akademik & Lifestyle
+            {t.InsightsHeroTitle}
           </h1>
         </div>
 
@@ -476,27 +490,28 @@ function InsightPage() {
 
         {/* Section 2: AI Narrative Insight */}
         <AINarrativeCard
-          title={t.AINarrativeInsightTitle || "AI Narrative Insight"}
+          title={t.AINarrativeInsightTitle}
           subtitle={narrativeSubtitle}
           description={latestInsightDescription}
         />
 
         {/* Section 3: Academic Condition Metrics */}
-        <AcademicCondition items={academicConditionData} />
+        <AcademicCondition items={academicConditionData} title={t.InsightsAcademicAverageTitle} />
 
         {/* Section 4: Weekly Analytics */}
         <div className="grid lg:grid-cols-2 gap-6">
-          <WeeklyActivityChart data={weeklyActivityData} />
+          <WeeklyActivityChart data={weeklyActivityData} title={t.InsightsWeeklyActivityTitle} />
           <StressIntensityChart
             avgScore={insightData?.weeklySummary.avgStressScore || 0}
             data={stressIntensityData}
+            title={t.InsightsStressIntensityTitle}
           />
         </div>
 
         {/* Section 5: Prioritas Hari Ini */}
         <div>
           <h2 className="theme-text text-2xl font-bold mb-4">
-            {t.PriorityTodayTitle || "Prioritas Hari Ini"}
+            {t.PriorityTodayTitle}
           </h2>
           <div className="grid lg:grid-cols-2 gap-4">
             {todayRecommendations.length > 0 ? (
@@ -511,7 +526,7 @@ function InsightPage() {
                 />
               ))
             ) : (
-              <div className="col-span-full theme-muted">Tidak ada prioritas hari ini.</div>
+              <div className="col-span-full theme-muted">{t.InsightsNoPriorityToday}</div>
             )}
           </div>
         </div>
@@ -519,7 +534,7 @@ function InsightPage() {
         {/* Section 6: Long-term Suggestions */}
         <div>
           <h2 className="theme-text text-2xl font-bold mb-4 mt-8">
-            {t.LongTermTitle || "Saran Jangka Panjang"}
+            {t.LongTermTitle}
           </h2>
           <div className="grid lg:grid-cols-2 gap-4">
             {longTermRecommendations.length > 0 ? (
@@ -534,7 +549,7 @@ function InsightPage() {
                 />
               ))
             ) : (
-              <div className="col-span-full theme-muted">Tidak ada saran jangka panjang.</div>
+              <div className="col-span-full theme-muted">{t.InsightsNoLongTermSuggestions}</div>
             )}
           </div>
         </div>

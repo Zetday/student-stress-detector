@@ -31,11 +31,11 @@ const data = [
   },
 ];
 
-function AcademicCondition({ items = data }) {
+function AcademicCondition({ items = data, title = "Rata-Rata Kondisi Akademik" }) {
   return (
     <div className="theme-card border rounded-2xl p-6">
       <h3 className="theme-text font-semibold text-xl mb-8">
-        Rata-Rata Kondisi Akademik
+        {title}
       </h3>
 
       <div className="space-y-6">

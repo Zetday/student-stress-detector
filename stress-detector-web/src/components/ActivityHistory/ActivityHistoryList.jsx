@@ -7,6 +7,19 @@ const statusBadge = {
   Terlambat: "bg-red-500/15 text-red-300",
 };
 
+const statusTranslationKey = {
+  Selesai: "ActivityHistoryStatusCompleted",
+  Draft: "ActivityHistoryStatusDraft",
+  Terlambat: "ActivityHistoryStatusLate",
+};
+
+const scoreLabelTranslationKey = {
+  Tinggi: "HighText",
+  Sedang: "MediumText",
+  Rendah: "LowText",
+  "Belum selesai": "ActivityHistoryScoreIncomplete",
+};
+
 const scoreColor = (score) => {
   if (score >= 70) {
     return "text-red-300";
@@ -17,8 +30,8 @@ const scoreColor = (score) => {
   return "text-emerald-300";
 };
 
-function formatDate(date) {
-  return date.toLocaleDateString("id-ID", {
+function formatDate(date, locale) {
+  return date.toLocaleDateString(locale || "id-ID", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -50,7 +63,12 @@ function getDisplayDate(item) {
   return parsePredictionDate(item.predictionDate) || item.datetime;
 }
 
-function ActivityHistoryList({ errorMessage = "", isLoading = false, items }) {
+function translateValue(value, translationMap, t) {
+  const translationKey = translationMap[value];
+  return translationKey ? t[translationKey] : value;
+}
+
+function ActivityHistoryList({ errorMessage = "", isLoading = false, items, t }) {
   const navigate = useNavigate();
 
   const handleActionClick = (item) => {
@@ -64,16 +82,16 @@ function ActivityHistoryList({ errorMessage = "", isLoading = false, items }) {
   return (
     <div className="theme-card overflow-hidden rounded-3xl border text-sm">
       <div className="theme-subtle theme-border hidden grid-cols-[1.3fr_2.4fr_1fr_1fr_0.9fr] gap-4 border-b px-5 py-4 text-left text-xs uppercase tracking-[0.24em] md:grid">
-        <div>Tanggal</div>
-        <div>Skor Stres</div>
-        <div>Status</div>
-        <div>Aksi</div>
+        <div>{t.ActivityHistoryTableDate}</div>
+        <div>{t.ActivityHistoryTableStressScore}</div>
+        <div>{t.ActivityHistoryTableStatus}</div>
+        <div>{t.ActivityHistoryTableAction}</div>
       </div>
 
       <div className="divide-y divide-[var(--border)]">
         {isLoading && (
           <div className="px-5 py-10 text-center theme-muted">
-            Memuat riwayat aktivitas...
+            {t.ActivityHistoryLoading}
           </div>
         )}
 
@@ -85,36 +103,46 @@ function ActivityHistoryList({ errorMessage = "", isLoading = false, items }) {
 
         {!isLoading && !errorMessage && items.length === 0 && (
           <div className="px-5 py-10 text-center theme-muted">
-            Belum ada riwayat aktivitas.
+            {t.ActivityHistoryEmpty}
           </div>
         )}
 
         {items.map((item) => (
           <div key={item.id} className="grid gap-3 px-5 py-4 text-sm md:grid-cols-[1.3fr_2.4fr_1fr_1fr_0.9fr] md:items-center">
             <div>
-              <p className="theme-text text-sm font-semibold">{formatDate(getDisplayDate(item))}</p>
+              <p className="theme-text text-sm font-semibold">{formatDate(getDisplayDate(item), t.DashboardDateLocale)}</p>
             </div>
 
             <div>
-              <p className={`font-semibold ${scoreColor(item.stressScore)}`}>{item.stressScore}/100</p>
-              <span className="theme-card-muted mt-1 inline-flex rounded-full px-3 py-1 text-xs font-semibold">
-                {item.scoreLabel}
-              </span>
+              {item.status === "Terlambat" ? (
+                <p className="theme-muted font-semibold">-</p>
+              ) : (
+                <>
+                  <p className={`font-semibold ${scoreColor(item.stressScore)}`}>{item.stressScore}/100</p>
+                  <span className="theme-card-muted mt-1 inline-flex rounded-full px-3 py-1 text-xs font-semibold">
+                    {translateValue(item.scoreLabel, scoreLabelTranslationKey, t)}
+                  </span>
+                </>
+              )}
             </div>
 
             <div>
               <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${statusBadge[item.status]}`}>
-                {item.status}
+                {translateValue(item.status, statusTranslationKey, t)}
               </span>
             </div>
 
             <div>
-              <button
-                onClick={() => handleActionClick(item)}
-                className="theme-card-muted rounded-full border px-4 py-2 text-sm font-semibold text-blue-400 transition hover:border-blue-400 hover:text-[var(--text)]"
-              >
-                {item.status === "Draft" ? "Lanjutkan Menulis" : "Lihat Detail"}
-              </button>
+              {item.status === "Terlambat" ? (
+                <span className="theme-muted text-sm font-semibold">-</span>
+              ) : (
+                <button
+                  onClick={() => handleActionClick(item)}
+                  className="theme-card-muted rounded-full border px-4 py-2 text-sm font-semibold text-blue-400 transition hover:border-blue-400 hover:text-[var(--text)]"
+                >
+                  {item.status === "Draft" ? t.ActivityHistoryContinueWriting : t.ActivityHistoryViewDetail}
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -134,8 +162,10 @@ ActivityHistoryList.propTypes = {
       stressScore: PropTypes.number,
       scoreLabel: PropTypes.string,
       status: PropTypes.string,
+      isVirtualLate: PropTypes.bool,
     })
   ).isRequired,
+  t: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default ActivityHistoryList;

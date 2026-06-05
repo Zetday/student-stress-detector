@@ -1,5 +1,13 @@
 import PropTypes from "prop-types";
 
+const blockedNumberKeys = new Set(["-", "+", ".", ",", "e", "E"]);
+
+function handleIntegerKeyDown(event) {
+  if (blockedNumberKeys.has(event.key)) {
+    event.preventDefault();
+  }
+}
+
 function ActivityInput({ field, value, onChange }) {
   if (field.type === "range") {
     return (
@@ -44,8 +52,11 @@ function ActivityInput({ field, value, onChange }) {
           min={field.min}
           max={field.max}
           step={field.step || "1"}
+          inputMode={field.type === "number" || !field.type ? "numeric" : undefined}
+          pattern={field.type === "number" || !field.type ? "[0-9]*" : undefined}
           value={value}
           onChange={onChange}
+          onKeyDown={field.type === "number" || !field.type ? handleIntegerKeyDown : undefined}
           placeholder={field.placeholder}
           required={field.required ?? true}
           className={`theme-input h-14 w-full rounded-xl border px-4 text-sm outline-none transition focus:border-blue-300 ${field.suffix ? "pr-16" : ""}`}
