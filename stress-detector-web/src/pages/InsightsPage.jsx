@@ -341,7 +341,7 @@ function InsightPage() {
       <Layout title={t.InsightsPageTitle} name={user.fullname} role={user.role}>
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <div className="w-10 h-10 rounded-full border-4 border-blue-500 border-t-transparent animate-spin" />
-          <p className="theme-muted text-sm">Memuat summary...</p>
+          <p className="theme-muted text-sm">{t.InsightsLoading}</p>
         </div>
       </Layout>
     );
