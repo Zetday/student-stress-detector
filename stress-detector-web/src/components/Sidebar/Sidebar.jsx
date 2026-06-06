@@ -129,7 +129,7 @@ function Sidebar({ isOpen, setIsOpen }) {
             </SidebarItem>
 
             <SidebarItem
-              to="/Insight"
+              to="/summary"
               icon={
                 <IconsSidebar
                   paths={
