@@ -28,6 +28,12 @@ export const createActivity = async (req, res, next) => {
   // Fixed: was req.user.userId (always undefined). JWT payload uses { id }.
   const { id: userId } = req.user;
 
+  // Check if activity on the same date already exists for this user
+  const existingActivity = await ActivityRepositories.getActivityByDate(userId, activityDate);
+  if (existingActivity) {
+    return next(new InvariantError('Aktivitas pada tanggal tersebut sudah ada'));
+  }
+
   // 1. Save activity to DB
   const activity = await ActivityRepositories.createActivity({
     userId,
@@ -177,6 +183,12 @@ export const updateActivity = async (req, res, next) => {
     return next(
       new AuthorizationError('Anda tidak berhak memperbarui aktivitas ini'),
     );
+  }
+
+  // Check if activity on the same date already exists for this user (excluding the current activity being updated)
+  const existingActivity = await ActivityRepositories.getActivityByDate(userId, activityDate);
+  if (existingActivity && existingActivity.id !== id) {
+    return next(new InvariantError('Aktivitas pada tanggal tersebut sudah ada'));
   }
 
   // 2. Update activity in DB

@@ -15,3 +15,5 @@ server.listen(port, () => {
   // Start the background RabbitMQ consumer
   consumer.start();
 });
+// Trigger nodemon reload
+

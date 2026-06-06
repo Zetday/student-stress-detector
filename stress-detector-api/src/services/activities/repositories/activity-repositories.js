@@ -156,6 +156,16 @@ class ActivityRepositories {
     const result = await this.pool.query(query);
     return result.rows[0] || null;
   }
+
+  async getActivityByDate(userId, activityDate) {
+    const query = {
+      text: 'SELECT * FROM daily_activities WHERE user_id = $1 AND activity_date = $2',
+      values: [userId, activityDate],
+    };
+
+    const result = await this.pool.query(query);
+    return result.rows[0] || null;
+  }
 }
 
 export default new ActivityRepositories();
