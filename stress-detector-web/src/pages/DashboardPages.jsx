@@ -166,7 +166,14 @@ function DashboardPage() {
         }
 
         const history = historyResponse.data || [];
-        const sortedHistory = [...history].sort((a, b) => b.datetime - a.datetime);
+        const sortedHistory = [...history].sort((a, b) => {
+          const dateA = a.predictionDate || "";
+          const dateB = b.predictionDate || "";
+          if (dateA !== dateB) {
+            return dateB.localeCompare(dateA);
+          }
+          return b.datetime - a.datetime;
+        });
         const todayStartDate = addDays(today, -6);
         const todayStartDateKey = getLocalDateKey(todayStartDate);
         const todayDateKey = getLocalDateKey(today);
@@ -362,7 +369,7 @@ function DashboardPage() {
           <div className="flex items-center gap-4">
             
             {/* Icon */}
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <img
                 src={calender}
                 alt="calendar"

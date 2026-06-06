@@ -73,7 +73,7 @@ const translations = {
 
     // Sidebar
     ActSdbr: "Riwayat Aktivitas",
-    CekStresSdbr: "Summary",
+    CekStresSdbr: "Ringkasan",
     ReqomendationSdbr: "Rekomendasi",
     ProfileSdbr: "Profile Saya",
     StressCheck: "Cek Stres",
@@ -206,11 +206,11 @@ const translations = {
     // Insights Page
     AINarrativeInsightTitle: "Ringkasan Naratif AI",
     AINarrativeInsightSubtitle: "Berikut ringkasan untuk minggu ini",
-    InsightsPageTitle: "Summary",
+    InsightsPageTitle: "Ringkasan",
     InsightsEyebrow: "Ringkasan & Analitik Akademik",
     InsightsHeroTitle: "Ringkasan Akademik & Lifestyle",
-    InsightsLoading: "Memuat data summary...",
-    InsightsFetchError: "Gagal memuat data summary.",
+    InsightsLoading: "Memuat data ringkasan...",
+    InsightsFetchError: "Gagal memuat data ringkasan.",
     InsightsLatestData: "Data terakhir",
     InsightsNoData: "Belum ada data",
     InsightsTrendUp: "naik",
